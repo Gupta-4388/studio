@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, ChangeEvent, DragEvent, useEffect } from 'react';
-import { UploadCloud, FileText, Lightbulb, Loader2, X, TrendingUp, ArrowRight } from 'lucide-react';
+import { UploadCloud, FileText, Lightbulb, Loader2, X, TrendingUp, ArrowRight, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -230,41 +230,66 @@ export default function ResumePage() {
 
                 {analysis && (
                     <div className="space-y-6 animate-in fade-in-50 duration-500">
-                    <Card>
-                        <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Lightbulb className="h-5 w-5 text-yellow-400" />
-                            Improvement Insights
-                        </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                        <ul className="list-disc space-y-2 pl-5 text-sm">
-                            {analysis.improvementInsights.map((insight, index) => (
-                            <li key={index}>{insight}</li>
-                            ))}
-                        </ul>
-                        </CardContent>
-                    </Card>
+                      <Card>
+                          <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                              <Briefcase className="h-5 w-5 text-accent" />
+                              Suggested Roles
+                          </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                              {analysis.suggestedRoles?.map((role, index) => (
+                                  <div key={index} className="p-4 border rounded-lg">
+                                      <div className="flex justify-between items-start">
+                                          <div>
+                                              <h4 className="font-semibold">{role.title}</h4>
+                                              <p className="text-sm text-muted-foreground mt-1">{role.description}</p>
+                                          </div>
+                                          <div className="text-right">
+                                            <p className="text-sm font-bold text-accent">{role.matchConfidence}%</p>
+                                            <p className="text-xs text-muted-foreground">Match</p>
+                                          </div>
+                                      </div>
+                                  </div>
+                              ))}
+                          </CardContent>
+                      </Card>
 
-                    <Card>
-                        <CardHeader>
-                        <CardTitle>Skill Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                        <p className="text-sm text-muted-foreground">
-                            {analysis.skillSummary}
-                        </p>
-                        <Separator className="my-4" />
-                        <div className="flex flex-wrap gap-2">
-                            {analysis.extractedSkills.map((skill) => (
-                            <Badge key={skill} variant="secondary">
-                                {skill}
-                            </Badge>
-                            ))}
-                        </div>
-                        </CardContent>
-                    </Card>
-                    <Button onClick={() => setAnalysis(null)}>Analyze Another Resume</Button>
+                      <Card>
+                          <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                              <Lightbulb className="h-5 w-5 text-yellow-400" />
+                              Improvement Insights
+                          </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                          <ul className="list-disc space-y-2 pl-5 text-sm">
+                              {analysis.improvementInsights.map((insight, index) => (
+                              <li key={index}>{insight}</li>
+                              ))}
+                          </ul>
+                          </CardContent>
+                      </Card>
+
+                      <Card>
+                          <CardHeader>
+                          <CardTitle>Skill Summary</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                          <p className="text-sm text-muted-foreground">
+                              {analysis.skillSummary}
+                          </p>
+                          <Separator className="my-4" />
+                          <div className="flex flex-wrap gap-2">
+                              {analysis.extractedSkills.map((skill) => (
+                              <Badge key={skill} variant="secondary">
+                                  {skill}
+                              </Badge>
+                              ))}
+                          </div>
+                          </CardContent>
+                      </Card>
+                      <Button onClick={() => setAnalysis(null)}>Analyze Another Resume</Button>
                     </div>
                 )}
             </CardContent>

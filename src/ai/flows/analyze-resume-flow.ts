@@ -24,6 +24,18 @@ const AnalyzeResumeInputSchema = z.object({
 });
 export type AnalyzeResumeInput = z.infer<typeof AnalyzeResumeInputSchema>;
 
+const SuggestedRoleSchema = z.object({
+  title: z.string().describe('The job title of the suggested role.'),
+  description: z
+    .string()
+    .describe('A short description of why this role is a good fit.'),
+  matchConfidence: z
+    .number()
+    .describe(
+      'A score from 0-100 indicating how well the resume matches the role.'
+    ),
+});
+
 const AnalyzeResumeOutputSchema = z.object({
   skillSummary: z
     .string()
@@ -33,7 +45,15 @@ const AnalyzeResumeOutputSchema = z.object({
     .describe(
       'A short, optimized list of AI-driven insights to improve the resume, including identifying potential mistakes and missing skills.'
     ),
-  extractedSkills: z.array(z.string()).describe("A list of skills extracted from the resume."),
+  extractedSkills: z
+    .array(z.string())
+    .describe('A list of skills extracted from the resume.'),
+  suggestedRoles: z
+    .array(SuggestedRoleSchema)
+    .optional()
+    .describe(
+      'A list of 3-5 suitable job roles based on the resume and current market analysis.'
+    ),
 });
 export type AnalyzeResumeOutput = z.infer<typeof AnalyzeResumeOutputSchema>;
 
@@ -51,6 +71,7 @@ const analyzeResumePrompt = ai.definePrompt({
 1.  A high-level summary of the user's skills.
 2.  A short, optimized list of actionable insights to improve the resume (e.g., clarity, impact, missing information).
 3.  A list of skills extracted from the resume content.
+4.  Analyze current job market openings and suggest 3-5 suitable roles for the candidate, including a title, a short description, and a match confidence score.
 
 Resume:
 {{media url=resumeDataUri}}`,
