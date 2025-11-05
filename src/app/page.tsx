@@ -1,8 +1,12 @@
 
+'use client';
+
 import Link from 'next/link';
 import { ArrowRight, Bot, FileText, Briefcase, TrendingUp, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { AuthForm } from '@/components/auth-form';
 
 export default function Home() {
   return (
@@ -10,12 +14,22 @@ export default function Home() {
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <Logo />
         <div className="flex items-center gap-4">
-          <Button asChild variant="outline">
-            <Link href="/dashboard">Sign In</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/dashboard">Sign Up</Link>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Sign In</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <AuthForm />
+            </DialogContent>
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Sign Up</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <AuthForm />
+            </DialogContent>
+          </Dialog>
         </div>
       </header>
       <main className="flex-grow">
@@ -36,11 +50,16 @@ export default function Home() {
                 PathFinder AI leverages cutting-edge artificial intelligence to analyze your skills, guide your growth, and connect you with the future of your career.
               </p>
               <div className="mt-8 flex justify-center gap-4">
-                <Button asChild size="lg" className="font-semibold">
-                  <Link href="/dashboard">
-                    Explore <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="font-semibold">
+                      Explore <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <AuthForm />
+                  </DialogContent>
+                </Dialog>
                 <Button asChild size="lg" variant="outline" className="font-semibold">
                   <Link href="#features">
                     Learn More
