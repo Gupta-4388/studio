@@ -171,7 +171,6 @@ export default function DashboardPage() {
                     </div>
                     <Button variant="outline" size="sm" asChild>
                       <a href={path.roadmapUrl} target="_blank" rel="noopener noreferrer">
-                        <BookOpen className="mr-2 h-4 w-4" />
                         View Roadmap
                       </a>
                     </Button>
