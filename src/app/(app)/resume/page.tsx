@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { Upload, File, Loader2 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
+import * as React from 'react';
 
 import {
   analyzeResume,
@@ -16,12 +17,38 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import ResumeAnalysis from '@/components/dashboard/resume-analysis';
+import { useDoc, useFirestore, useUser } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+
+type UserProfile = {
+  resumeDataUri?: string;
+  resumeFileName?: string;
+};
 
 export default function ResumePage() {
   const [analysis, setAnalysis] = useState<AnalyzeResumeOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = React.useMemo(
+    () => (user ? doc(firestore, 'users', user.uid) : null),
+    [user, firestore]
+  );
+  const { data: userProfile } = useDoc<UserProfile>(userDocRef);
+  
+  React.useEffect(() => {
+      if (userProfile && userProfile.resumeFileName) {
+        setFile({ name: userProfile.resumeFileName } as File);
+      } else {
+        setFile(null);
+        setAnalysis(null);
+      }
+  }, [userProfile]);
+
 
   const onDrop = async (acceptedFiles: File[]) => {
     const uploadedFile = acceptedFiles[0];
@@ -38,6 +65,7 @@ export default function ResumePage() {
   };
 
   const handleAnalysis = async (fileToAnalyze: File) => {
+    if (!userDocRef) return;
     setLoading(true);
     setAnalysis(null);
     localStorage.removeItem('recommendedCareerPaths'); // Clear previous recommendations
@@ -47,6 +75,8 @@ export default function ResumePage() {
     reader.onload = async () => {
       try {
         const resumeDataUri = reader.result as string;
+        setDocumentNonBlocking(userDocRef, { resumeDataUri, resumeFileName: fileToAnalyze.name }, { merge: true });
+
         const analysisResult = await analyzeResume({ resumeDataUri });
         setAnalysis(analysisResult);
 
@@ -93,6 +123,14 @@ export default function ResumePage() {
     maxFiles: 1,
   });
 
+  const handleRemoveResume = () => {
+    if (!userDocRef) return;
+    setDocumentNonBlocking(userDocRef, { resumeDataUri: null, resumeFileName: null }, { merge: true });
+    setFile(null);
+    setAnalysis(null);
+    localStorage.removeItem('recommendedCareerPaths');
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -126,11 +164,7 @@ export default function ResumePage() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  setFile(null);
-                  setAnalysis(null);
-                  localStorage.removeItem('recommendedCareerPaths');
-                }}
+                onClick={handleRemoveResume}
               >
                 Remove
               </Button>

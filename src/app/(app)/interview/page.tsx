@@ -42,12 +42,15 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useDoc, useFirestore, useUser } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 const SpeechRecognition =
   (typeof window !== 'undefined' && window.SpeechRecognition) ||
   (typeof window !== 'undefined' && window.webkitSpeechRecognition);
 
 type InterviewMode = 'video' | 'audio' | 'text';
+type UserProfile = { resumeDataUri?: string };
 
 export default function InterviewPage() {
   const [domain, setDomain] = useState('');
@@ -64,6 +67,14 @@ export default function InterviewPage() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = React.useMemo(
+    () => (user ? doc(firestore, 'users', user.uid) : null),
+    [user, firestore]
+  );
+  const { data: userProfile } = useDoc<UserProfile>(userDocRef);
 
   useEffect(() => {
     if (interviewStarted && interviewMode === 'video') {
@@ -129,8 +140,8 @@ export default function InterviewPage() {
     }
     setInterviewStarted(true);
     setLoading(true);
-    const resumeDataUri = localStorage.getItem('resumeDataUri');
-    if (!resumeDataUri) {
+
+    if (!userProfile?.resumeDataUri) {
       toast({
         variant: 'destructive',
         title: 'Resume not found',
@@ -144,7 +155,7 @@ export default function InterviewPage() {
     try {
       const result = await mockInterviewWithRealtimeFeedback({
         domain,
-        resumeDataUri,
+        resumeDataUri: userProfile.resumeDataUri,
       });
       setCurrentQuestion(result.question);
     } catch (error) {
@@ -158,7 +169,7 @@ export default function InterviewPage() {
     } finally {
       setLoading(false);
     }
-  }, [domain, toast]);
+  }, [domain, toast, userProfile]);
 
   const toggleRecording = () => {
     if (!SpeechRecognition) {
@@ -214,11 +225,11 @@ export default function InterviewPage() {
     setCurrentQuestion('');
     setUserAnswer('');
     setAnalysis(null);
-    const resumeDataUri = localStorage.getItem('resumeDataUri') as string;
+    if (!userProfile?.resumeDataUri) return;
     try {
       const result = await mockInterviewWithRealtimeFeedback({
         domain,
-        resumeDataUri,
+        resumeDataUri: userProfile.resumeDataUri,
       });
       setCurrentQuestion(result.question);
     } catch (error) {

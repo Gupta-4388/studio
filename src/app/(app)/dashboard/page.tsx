@@ -29,12 +29,26 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { useDoc, useFirestore, useUser } from '@/firebase';
+import { doc } from 'firebase/firestore';
+
+type UserProfile = {
+  resumeDataUri?: string;
+};
 
 export default function DashboardPage() {
   const [recommendedPaths, setRecommendedPaths] =
     useState<RecommendCareerPathsOutput | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = React.useMemo(
+    () => (user ? doc(firestore, 'users', user.uid) : null),
+    [user, firestore]
+  );
+  const { data: userProfile } = useDoc<UserProfile>(userDocRef);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -46,11 +60,10 @@ export default function DashboardPage() {
         setLoading(false);
         return;
       }
-
-      const resumeDataUri = localStorage.getItem('resumeDataUri');
-      if (resumeDataUri) {
+      
+      if (userProfile && userProfile.resumeDataUri) {
         try {
-          const analysisResult = await analyzeResume({ resumeDataUri });
+          const analysisResult = await analyzeResume({ resumeDataUri: userProfile.resumeDataUri });
 
           if (analysisResult.extractedSkills.length > 0) {
             const careerPathResult = await recommendCareerPaths({
@@ -74,8 +87,10 @@ export default function DashboardPage() {
       setLoading(false);
     };
 
-    fetchRecommendations();
-  }, [toast]);
+    if (userProfile !== undefined) {
+        fetchRecommendations();
+    }
+  }, [userProfile, toast]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

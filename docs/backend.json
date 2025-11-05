@@ -38,6 +38,10 @@
           "type": "string",
           "description": "URL of the user's Naukri profile, if provided.",
           "format": "uri"
+        },
+        "careerPath": {
+          "type": "string",
+          "description": "The user's desired career path."
         }
       },
       "required": [

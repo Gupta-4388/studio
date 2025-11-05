@@ -43,6 +43,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PageHeader from '@/components/dashboard/page-header';
 import { useToast } from '@/hooks/use-toast';
+import { useDoc, useFirestore, useUser } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
@@ -57,16 +59,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { toast } = useToast();
-  const [avatarImage, setAvatarImage] = React.useState<string | null>(
-    'https://picsum.photos/seed/user/100/100'
-  );
+  const { user } = useUser();
+  const firestore = useFirestore();
 
-  React.useEffect(() => {
-    const savedAvatar = localStorage.getItem('avatarImage');
-    if (savedAvatar) {
-      setAvatarImage(savedAvatar);
-    }
-  }, [pathname]); // Re-check on route change in case settings are updated.
+  const userDocRef = React.useMemo(
+    () => (user ? doc(firestore, 'users', user.uid) : null),
+    [user, firestore]
+  );
+  const { data: userProfile } = useDoc<{ profilePicture?: string }>(userDocRef);
 
   const handleSignOut = () => {
     localStorage.clear();

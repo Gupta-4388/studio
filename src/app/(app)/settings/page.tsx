@@ -18,47 +18,67 @@ import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from '@/components/settings/theme-toggle';
 import { File, LogOut, Upload, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useUser, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useDoc } from '@/firebase/firestore/use-doc';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+
+type UserProfile = {
+  name?: string;
+  email?: string;
+  careerPath?: string;
+  profilePicture?: string;
+  resumeFileName?: string;
+  resumeDataUri?: string;
+};
 
 export default function SettingsPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = useMemoFirebase(
+    () => (user ? doc(firestore, 'users', user.uid) : null),
+    [user, firestore]
+  );
+  const { data: userProfile, isLoading } = useDoc<UserProfile>(userDocRef);
+
   const [resumeFile, setResumeFile] = useState<{ name: string } | null>(null);
   const [avatarImage, setAvatarImage] = useState<string | null>(
     'https://picsum.photos/seed/user/100/100'
   );
-  const [name, setName] = useState('Your Name');
-  const [email, setEmail] = useState('your.email@example.com');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [careerPath, setCareerPath] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const savedResumeName = localStorage.getItem('resumeFileName');
-    if (savedResumeName) {
-      setResumeFile({ name: savedResumeName });
+    if (userProfile) {
+      setName(userProfile.name || user?.displayName || '');
+      setEmail(userProfile.email || user?.email || '');
+      setCareerPath(userProfile.careerPath || '');
+      if (userProfile.profilePicture) {
+        setAvatarImage(userProfile.profilePicture);
+      }
+      if (userProfile.resumeFileName) {
+        setResumeFile({ name: userProfile.resumeFileName });
+      }
     }
-    const savedAvatar = localStorage.getItem('avatarImage');
-    if (savedAvatar) {
-      setAvatarImage(savedAvatar);
-    }
-    const savedName = localStorage.getItem('userName');
-    if (savedName) {
-      setName(savedName);
-    }
-    const savedEmail = localStorage.getItem('userEmail');
-    if (savedEmail) {
-      setEmail(savedEmail);
-    }
-    const savedCareerPath = localStorage.getItem('userCareerPath');
-    if (savedCareerPath) {
-      setCareerPath(savedCareerPath);
-    }
-  }, []);
+  }, [userProfile, user]);
 
   const handleProfileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem('userName', name);
-    localStorage.setItem('userEmail', email);
-    localStorage.setItem('userCareerPath', careerPath);
+    if (!userDocRef) return;
+
+    const dataToSave: Partial<UserProfile> = {
+      name,
+      email,
+      careerPath,
+    };
+
+    setDocumentNonBlocking(userDocRef, dataToSave, { merge: true });
+
     toast({
       title: 'Profile Updated',
       description: 'Your profile information has been saved.',
@@ -75,7 +95,7 @@ export default function SettingsPage() {
   
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
-    if (!file) {
+    if (!file || !userDocRef) {
       toast({
         variant: 'destructive',
         title: 'File upload failed',
@@ -89,8 +109,8 @@ export default function SettingsPage() {
     reader.onload = () => {
       try {
         const resumeDataUri = reader.result as string;
-        localStorage.setItem('resumeDataUri', resumeDataUri);
-        localStorage.setItem('resumeFileName', file.name);
+        const dataToSave = { resumeDataUri, resumeFileName: file.name };
+        setDocumentNonBlocking(userDocRef, dataToSave, { merge: true });
         setResumeFile({ name: file.name });
         toast({
           title: 'Resume Uploaded',
@@ -111,7 +131,7 @@ export default function SettingsPage() {
         description: 'Could not read the uploaded file.',
       });
     };
-  }, [toast]);
+  }, [toast, userDocRef]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -126,8 +146,9 @@ export default function SettingsPage() {
   });
 
   const handleRemoveResume = () => {
-    localStorage.removeItem('resumeDataUri');
-    localStorage.removeItem('resumeFileName');
+    if (!userDocRef) return;
+    const dataToSave = { resumeDataUri: null, resumeFileName: null };
+    setDocumentNonBlocking(userDocRef, dataToSave, { merge: true });
     setResumeFile(null);
     toast({
       title: 'Resume Removed',
@@ -137,12 +158,12 @@ export default function SettingsPage() {
   
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (file && userDocRef) {
       const reader = new FileReader();
       reader.onload = () => {
         const dataUri = reader.result as string;
         setAvatarImage(dataUri);
-        localStorage.setItem('avatarImage', dataUri);
+        setDocumentNonBlocking(userDocRef, { profilePicture: dataUri }, { merge: true });
         toast({
           title: 'Photo updated',
           description: 'Your new profile photo has been saved.',
