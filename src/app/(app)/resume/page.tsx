@@ -205,7 +205,11 @@ export default function ResumePage() {
               <CardDescription>Actionable feedback to make your resume stand out.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-sm whitespace-pre-wrap font-mono bg-muted/50 p-4 rounded-md border" dangerouslySetInnerHTML={{ __html: analysis.improvementInsights.replace(/\n/g, '<br />') }} />
+              <ul className="text-sm space-y-2 list-disc list-inside font-mono bg-muted/50 p-4 rounded-md border">
+                {analysis.improvementInsights.map((insight, index) => (
+                  <li key={index}>{insight}</li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </div>

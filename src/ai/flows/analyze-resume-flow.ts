@@ -19,7 +19,7 @@ const AnalyzeResumeInputSchema = z.object({
   resumeDataUri: z
     .string()
     .describe(
-      'The resume file as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' // Corrected the typo here
+      "The resume file as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'." // Corrected the typo here
     ),
 });
 export type AnalyzeResumeInput = z.infer<typeof AnalyzeResumeInputSchema>;
@@ -29,9 +29,9 @@ const AnalyzeResumeOutputSchema = z.object({
     .string()
     .describe('A summary of the skills identified in the resume.'),
   improvementInsights: z
-    .string()
+    .array(z.string())
     .describe(
-      'AI-driven insights to improve the resume, including identifying potential mistakes and missing skills.'
+      'A short, optimized list of AI-driven insights to improve the resume, including identifying potential mistakes and missing skills.'
     ),
 });
 export type AnalyzeResumeOutput = z.infer<typeof AnalyzeResumeOutputSchema>;
@@ -51,8 +51,8 @@ const analyzeResumePrompt = ai.definePrompt({
 Resume:
 {{media url=resumeDataUri}}
 
-
-Provide the skillSummary and improvementInsights as described in the output schema.
+Provide the skillSummary and a list of short, actionable improvementInsights as described in the output schema.
+The insights should be presented as a bulleted list.
 `,
 });
 
