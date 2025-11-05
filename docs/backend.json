@@ -22,7 +22,7 @@
         },
         "signUpMethod": {
           "type": "string",
-          "description": "The method used to sign up (e.g., 'google', 'github', 'email')."
+          "description": "The method used to sign up (e.g., 'google', 'email')."
         },
         "profilePicture": {
           "type": "string",
@@ -51,7 +51,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "OAuthProvider",
       "type": "object",
-      "description": "Stores data from OAuth providers like Google and Github.",
+      "description": "Stores data from OAuth providers like Google.",
       "properties": {
         "id": {
           "type": "string",
@@ -63,7 +63,7 @@
         },
         "providerName": {
           "type": "string",
-          "description": "Name of the OAuth provider (e.g., 'google', 'github')."
+          "description": "Name of the OAuth provider (e.g., 'google')."
         },
         "providerUserId": {
           "type": "string",
@@ -97,8 +97,7 @@
     "providers": [
       "password",
       "anonymous",
-      "google.com",
-      "github.com"
+      "google.com"
     ]
   },
   "firestore": {
@@ -136,6 +135,6 @@
         }
       }
     ],
-    "reasoning": "This Firestore data structure is designed to support user authentication with Google and GitHub, while adhering to the principles of Authorization Independence, Structural Segregation, Access Modeling, and Data Clarity. The key strategy is to denormalize relevant authorization data to avoid `get()` calls in security rules, ensuring atomic operations and easier debugging.\n\n1.  **Users Collection:** Stores user profiles with basic information. The `signUpMethod` field indicates the authentication provider used (google, github, email).\n2.  **OAuthProviders Collection:**  This collection stores the OAuth access and refresh tokens of the users. The `userId` field points to the User ID. A `providerName` indicates which service the tokens belong to.\n\n**Authorization Independence:** Authorization independence is achieved because the `User` document contains the `id`, `email`, `name`, and `signUpMethod` fields.\n\n**QAPs (Rules are not Filters):** The design supports secure `list` operations by ensuring that collections contain documents with homogeneous security postures. For example, user-specific data is stored under `/users/{userId}`, allowing rules to easily filter based on the request's `auth.uid` without needing complex filtering logic."
+    "reasoning": "This Firestore data structure is designed to support user authentication with Google, while adhering to the principles of Authorization Independence, Structural Segregation, Access Modeling, and Data Clarity. The key strategy is to denormalize relevant authorization data to avoid `get()` calls in security rules, ensuring atomic operations and easier debugging.\n\n1.  **Users Collection:** Stores user profiles with basic information. The `signUpMethod` field indicates the authentication provider used (google, email).\n2.  **OAuthProviders Collection:**  This collection stores the OAuth access and refresh tokens of the users. The `userId` field points to the User ID. A `providerName` indicates which service the tokens belong to.\n\n**Authorization Independence:** Authorization independence is achieved because the `User` document contains the `id`, `email`, `name`, and `signUpMethod` fields.\n\n**QAPs (Rules are not Filters):** The design supports secure `list` operations by ensuring that collections contain documents with homogeneous security postures. For example, user-specific data is stored under `/users/{userId}`, allowing rules to easily filter based on the request's `auth.uid` without needing complex filtering logic."
   }
 }

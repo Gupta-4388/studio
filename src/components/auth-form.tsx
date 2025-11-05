@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Github } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import {
   signInWithPopup,
   GoogleAuthProvider,
-  GithubAuthProvider,
 } from 'firebase/auth';
 
 import { Button } from '@/components/ui/button';
@@ -54,7 +53,7 @@ const signUpSchema = z.object({
 });
 
 const GoogleIcon = () => (
-  <svg className="h-5 w-5" viewBox="0 0 24 24">
+  <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
     <path
       fill="currentColor"
       d="M21.35 11.1H12.18V13.83H18.69C18.36 17.64 15.19 19.27 12.19 19.27C8.36 19.27 5.03 16.21 5.03 12.5C5.03 8.79 8.36 5.73 12.19 5.73C14.02 5.73 15.64 6.33 16.9 7.38L19.31 5.22C17.59 3.82 15.11 3 12.19 3C7.03 3 3 7.5 3 12.5C3 17.5 7.03 22 12.19 22C17.6 22 21.7 18.2 21.7 12.5C21.7 11.9 21.52 11.5 21.35 11.1Z"
@@ -112,25 +111,6 @@ export function AuthForm() {
         variant: 'destructive',
         title: 'Sign-In Failed',
         description: 'Could not sign in with Google. Please try again.',
-      });
-    }
-  };
-
-  const handleGithubSignIn = async () => {
-    const provider = new GithubAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      toast({
-        title: 'Signed In with GitHub',
-        description: 'You have been successfully signed in.',
-      });
-      router.push('/dashboard');
-    } catch (error) {
-      console.error('GitHub Sign-In Error:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Sign-In Failed',
-        description: 'Could not sign in with GitHub. Please try again.',
       });
     }
   };
@@ -304,21 +284,17 @@ export function AuthForm() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <Button variant="outline" onClick={handleGoogleSignIn}>
             <GoogleIcon />
-            Google
-          </Button>
-          <Button variant="outline" onClick={handleGithubSignIn}>
-            <Github />
-            GitHub
+            Continue with Google
           </Button>
         </div>
 
         <div className="mt-6 text-center text-sm text-muted-foreground">
           {activeTab === 'sign-in' ? (
             <>
-              Don't have an account?{' '}
+              Don\'t have an account?{' '}
               <button
                 onClick={() => setActiveTab('sign-up')}
                 className="font-medium text-primary hover:underline"
