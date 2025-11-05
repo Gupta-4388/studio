@@ -45,9 +45,9 @@ Candidate's Answer: {{{answer}}}
 
 Provide the following feedback:
 1.  **Clarity**: Was the answer well-structured and easy to follow?
-2.  **Content**: Was the answer relevant, accurate, and comprehensive?
+2.  **Content**: Provide a clear and optimized analysis of the answer's relevance and accuracy.
 3.  **Score**: Provide an overall score from 0-100 based on clarity, content, relevance, and confidence.
-4.  **Improvement Tips**: Offer specific, actionable advice for how the candidate could improve their answer.
+4.  **Improvement Tips**: Offer specific, actionable, and optimized advice for how the candidate could improve their answer.
 `,
 });
 
