@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from '@/components/settings/theme-toggle';
-import { File, Upload, X } from 'lucide-react';
+import { File, LogOut, Upload, X } from 'lucide-react';
 
 export default function SettingsPage() {
   const { toast } = useToast();
@@ -136,6 +136,14 @@ export default function SettingsPage() {
     fileInputRef.current?.click();
   };
 
+  const handleSignOut = () => {
+    toast({
+      title: 'Signed Out',
+      description: 'You have been successfully signed out.',
+    });
+    // Here you would typically redirect the user or clear authentication state
+  };
+
 
   return (
     <div className="space-y-6">
@@ -231,17 +239,33 @@ export default function SettingsPage() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Appearance</CardTitle>
-            <CardDescription>
-              Customize the look and feel of the application.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ThemeToggle />
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Appearance</CardTitle>
+                <CardDescription>
+                  Customize the look and feel of the application.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ThemeToggle />
+              </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Sign Out</CardTitle>
+                    <CardDescription>
+                    You will be returned to the login screen.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button variant="outline" onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Change Password</CardTitle>
