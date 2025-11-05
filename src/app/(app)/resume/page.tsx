@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -98,7 +99,7 @@ export default function ResumePage() {
             <p className="mt-4 text-center text-muted-foreground">
               {isDragActive
                 ? 'Drop the file here ...'
-                : "Drag 'n' drop your resume here, or click to select a file"}
+                : 'Upload your resume here'}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               (PDF, DOCX, TXT)
