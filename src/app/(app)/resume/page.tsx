@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
-import { Upload, FileText, Lightbulb, Loader2, X, BrainCircuit, Sparkles, Wand2 } from 'lucide-react';
+import { Upload, FileText, Lightbulb, Loader2, X, BrainCircuit, Sparkles, Wand2, BarChart3, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,29 @@ import { analyzeResume, AnalyzeResumeOutput } from '@/ai/flows/analyze-resume-fl
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LabelList,
+} from 'recharts';
+
+type SkillCategory = {
+  category: string;
+  skills: AnalyzeResumeOutput['extractedSkills'];
+};
+
+const proficiencyColors: { [key: string]: string } = {
+  Beginner: 'bg-blue-200 text-blue-800',
+  Intermediate: 'bg-green-200 text-green-800',
+  Advanced: 'bg-yellow-200 text-yellow-800',
+  Expert: 'bg-purple-200 text-purple-800',
+};
+
 
 export default function ResumePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -91,8 +114,17 @@ export default function ResumePage() {
     }
   }
 
+  const categorizedSkills = analysis?.extractedSkills.reduce((acc, skill) => {
+    const category = skill.category || 'Other';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(skill);
+    return acc;
+  }, {} as Record<string, AnalyzeResumeOutput['extractedSkills']>);
+
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-8">
+    <div className="w-full max-w-6xl mx-auto space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight">Resume Analyzer</h1>
         <p className="mt-2 text-muted-foreground">
@@ -183,35 +215,117 @@ export default function ResumePage() {
 
       {analysis && (
         <div className="space-y-6 animate-in fade-in-50 duration-500">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BrainCircuit className="h-6 w-6 text-accent" />
-                AI Skill Summary
-              </CardTitle>
-              <CardDescription>An AI-generated overview of the skills identified in your resume.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 p-4 rounded-md border">{analysis.skillSummary}</p>
-            </CardContent>
-          </Card>
+           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Wand2 className="h-6 w-6 text-accent" />
+                  Improvement Insights
+                </CardTitle>
+                <CardDescription>Actionable feedback to make your resume stand out.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm space-y-3 list-disc list-inside">
+                  {analysis.improvementInsights.map((insight, index) => (
+                    <li key={index} className="leading-relaxed">{insight}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BrainCircuit className="h-6 w-6 text-accent" />
+                  Extracted Skills
+                </CardTitle>
+                <CardDescription>An AI-generated overview of the skills identified in your resume.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {categorizedSkills && Object.entries(categorizedSkills).map(([category, skills]) => (
+                    <div key={category}>
+                      <h3 className="font-semibold mb-2">{category}</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {skills.map(skill => (
+                          <Badge key={skill.name} variant="secondary" className="text-sm py-1 px-3">
+                            {skill.name}
+                            <span className={`ml-2 text-xs font-normal px-2 py-0.5 rounded-full ${proficiencyColors[skill.proficiency]}`}>{skill.proficiency}</span>
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Wand2 className="h-6 w-6 text-accent" />
-                Improvement Insights
+                <TrendingUp className="h-6 w-6 text-accent" />
+                Market Skill Analysis
               </CardTitle>
-              <CardDescription>Actionable feedback to make your resume stand out.</CardDescription>
+              <CardDescription>How your skills stack up against the top 10 most in-demand skills for your likely role.</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="text-sm space-y-2 list-disc list-inside font-mono bg-muted/50 p-4 rounded-md border">
-                {analysis.improvementInsights.map((insight, index) => (
-                  <li key={index}>{insight}</li>
-                ))}
-              </ul>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart
+                  data={analysis.marketSkillsComparison}
+                  layout="vertical"
+                  margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" hide />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    tickLine={false}
+                    axisLine={false}
+                    width={150}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'hsl(var(--muted))' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="rounded-lg border bg-background p-2 shadow-sm">
+                            <p className="font-bold">{`${payload[0].payload.name}`}</p>
+                            <p className={payload[0].payload.inResume ? 'text-green-500' : 'text-red-500'}>
+                              {payload[0].payload.inResume ? 'Found in resume' : 'Not found in resume'}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="inResume" barSize={30} radius={[0, 4, 4, 0]}>
+                    {analysis.marketSkillsComparison.map((entry, index) => (
+                      <LabelList
+                        key={`label-${index}`}
+                        dataKey="inResume"
+                        position="right"
+                        formatter={(value: boolean) => (value ? '✅' : '❌')}
+                        fontSize={16}
+                      />
+                    ))}
+                    {
+                      analysis.marketSkillsComparison.map((entry) => (
+                        <Bar
+                          key={entry.name}
+                          dataKey="inResume"
+                          fill={entry.inResume ? 'hsl(var(--accent))' : 'hsl(var(--muted))'}
+                        />
+                      ))
+                    }
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
+
         </div>
       )}
     </div>
