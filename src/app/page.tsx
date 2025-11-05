@@ -6,8 +6,16 @@ import Logo from '@/components/logo';
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <Logo />
+        <div className="flex items-center gap-4">
+          <Button asChild variant="outline">
+            <Link href="/dashboard">Sign In</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/dashboard">Sign Up</Link>
+          </Button>
+        </div>
       </header>
       <main className="flex-grow">
         <section className="relative overflow-hidden py-20 md:py-32">
