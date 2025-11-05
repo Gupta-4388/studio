@@ -35,15 +35,15 @@ export function ThemeToggle() {
     <RadioGroup
       value={theme}
       onValueChange={(value) => handleThemeChange(value as 'light' | 'dark')}
-      className="grid max-w-md grid-cols-2 gap-8 pt-2"
+      className="grid max-w-sm grid-cols-2 gap-4 pt-2"
     >
       <Label className="border-muted hover:border-accent relative flex flex-col items-center justify-center rounded-md border-2 p-4 text-center">
-        <Sun className="mb-3 h-6 w-6" />
+        <Sun className="mb-2 h-5 w-5" />
         <RadioGroupItem value="light" id="light" className="sr-only" />
         Light
       </Label>
       <Label className="border-muted hover:border-accent relative flex flex-col items-center justify-center rounded-md border-2 p-4 text-center">
-        <Moon className="mb-3 h-6 w-6" />
+        <Moon className="mb-2 h-5 w-5" />
         <RadioGroupItem value="dark" id="dark" className="sr-only" />
         Dark
       </Label>
