@@ -1,46 +1,73 @@
 'use client';
 
+import {
+  Activity,
+  ArrowRight,
+  Book,
+  CheckCircle,
+  Lightbulb,
+  Loader2,
+  TrendingUp,
+} from 'lucide-react';
+import Link from 'next/link';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Circle, TrendingUp } from 'lucide-react';
-import React from 'react';
-import { cn } from '@/lib/utils';
+
+const chartData = [
+  { month: 'January', desktop: 186 },
+  { month: 'February', desktop: 305 },
+  { month: 'March', desktop: 237 },
+  { month: 'April', desktop: 73 },
+  { month: 'May', desktop: 209 },
+  { month: 'June', desktop: 214 },
+];
+
+const chartConfig = {
+  desktop: {
+    label: 'Desktop',
+    color: 'hsl(var(--chart-1))',
+  },
+};
 
 const careerPaths = [
   {
     title: 'AI/ML Engineer',
-    description: 'Design and develop machine learning and deep learning systems.',
+    description:
+      'Design and develop machine learning and deep learning systems.',
     growth: 18,
     skills: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'NLP'],
     progress: 75,
-    milestones: [
-      { task: 'Master Python & Core Libraries', completed: true },
-      { task: 'Learn Foundational ML Concepts', completed: true },
-      { task: 'Deep Dive into Deep Learning', completed: true },
-      { task: 'Specialize in NLP or Computer Vision', completed: false },
-      { task: 'Build Portfolio Projects', completed: false },
-    ],
   },
   {
     title: 'Full-Stack Developer',
-    description: 'Work on both the front-end and back-end of web applications.',
+    description:
+      'Work on both the front-end and back-end of web applications.',
     growth: 12,
     skills: ['JavaScript', 'React', 'Node.js', 'SQL', 'APIs'],
     progress: 60,
-    milestones: [
-      { task: 'HTML, CSS, & JavaScript Fundamentals', completed: true },
-      { task: 'Master a Frontend Framework (React)', completed: true },
-      { task: 'Learn Backend Development (Node.js)', completed: false },
-      { task: 'Database Management (SQL/NoSQL)', completed: false },
-      { task: 'Deploy a Full-Stack Application', completed: false },
-    ],
   },
   {
     title: 'Cloud & DevOps Engineer',
@@ -48,112 +75,187 @@ const careerPaths = [
     growth: 22,
     skills: ['AWS/GCP/Azure', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform'],
     progress: 40,
-    milestones: [
-      { task: 'Cloud Provider Fundamentals (AWS)', completed: true },
-      { task: 'Containerization with Docker', completed: true },
-      { task: 'Orchestration with Kubernetes', completed: false },
-      { task: 'Infrastructure as Code (Terraform)', completed: false },
-      { task: 'CI/CD Pipeline Automation', completed: false },
-    ],
   },
 ];
 
 export default function DashboardPage() {
   return (
-    <div className="w-full space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Welcome Back, PathFinder!
-        </h1>
-        <p className="text-muted-foreground max-w-4xl">
-          PathFinders AI is your personal career navigator. Analyze your resume,
-          explore tailored career paths, practice for interviews, and stay ahead
-          of job market trends. Ready to get started?
-        </p>
-      </div>
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Card className="col-span-1 lg:col-span-3">
+        <CardHeader>
+          <CardTitle>Welcome Back, PathFinder!</CardTitle>
+          <CardDescription>
+            Here&apos;s a snapshot of your career journey.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Resume Score
+              </CardTitle>
+              <Lightbulb className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">88%</div>
+              <p className="text-xs text-muted-foreground">
+                Top 15% of profiles
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Skills to Develop
+              </CardTitle>
+              <Activity className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">5</div>
+              <p className="text-xs text-muted-foreground">
+                2 new skills suggested
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Active Learning
+              </CardTitle>
+              <Book className="w-4 h-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">3 Courses</div>
+              <p className="text-xs text-muted-foreground">1 course completed</p>
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
 
-      <div className="text-center py-8">
-        <h2 className="text-3xl font-bold text-accent font-headline">
-          Transform your AI into a trusted companion
-        </h2>
-        <p className="text-lg text-muted-foreground mt-2">
-          Build loyalty with contextual intelligence that lasts beyond a single
-          session.
-        </p>
-      </div>
+      <Card className="col-span-1 lg:col-span-2">
+        <CardHeader>
+          <CardTitle>Job Market Trends</CardTitle>
+          <CardDescription>
+            Demand for your skills in the last 6 months.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="min-h-64 w-full">
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <YAxis />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent />}
+                />
+                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </CardContent>
+      </Card>
 
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Top Career Paths For You</h2>
-        <p className="text-muted-foreground mb-6">
-          Based on Current Trends, here are some recommended career paths.
-        </p>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {careerPaths.map((path, index) => (
-            <Card key={index} className="flex flex-col">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle>{path.title}</CardTitle>
-                  <Badge variant="secondary" className="bg-green-800/20 text-green-400 border-none">
-                    <TrendingUp className="mr-1 h-4 w-4" /> +{path.growth}%
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Next Steps</CardTitle>
+          <CardDescription>
+            Actions to accelerate your career growth.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Link
+            href="/resume"
+            className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted transition-colors"
+          >
+            <div className="bg-accent/10 p-3 rounded-full">
+              <CheckCircle className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <p className="font-semibold">Update Your Resume</p>
+              <p className="text-sm text-muted-foreground">
+                Incorporate recent feedback
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 ml-auto text-muted-foreground" />
+          </Link>
+          <Link
+            href="/interview"
+            className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted transition-colors"
+          >
+            <div className="bg-accent/10 p-3 rounded-full">
+              <Loader2 className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <p className="font-semibold">Practice Interview</p>
+              <p className="text-sm text-muted-foreground">
+                AI/ML Engineer Role
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 ml-auto text-muted-foreground" />
+          </Link>
+          <Link
+            href="/mentor"
+            className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted transition-colors"
+          >
+            <div className="bg-accent/10 p-3 rounded-full">
+              <TrendingUp className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <p className="font-semibold">Explore New Skills</p>
+              <p className="text-sm text-muted-foreground">
+                Chat with your AI Mentor
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 ml-auto text-muted-foreground" />
+          </Link>
+        </CardContent>
+      </Card>
+
+      {careerPaths.map((path, index) => (
+        <Card key={index} className="flex flex-col">
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <CardTitle>{path.title}</CardTitle>
+              <Badge
+                variant="secondary"
+                className="bg-green-800/20 text-green-400 border-none"
+              >
+                <TrendingUp className="mr-1 h-4 w-4" /> +{path.growth}%
+              </Badge>
+            </div>
+            <CardDescription>{path.description}</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-grow">
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
+                Required Skills
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {path.skills.map((skill) => (
+                  <Badge key={skill} variant="outline">
+                    {skill}
                   </Badge>
-                </div>
-                <CardDescription>{path.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-grow">
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
-                    Required Skills
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {path.skills.map((skill) => (
-                      <Badge key={skill} variant="outline">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="my-4">
-                  <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
-                    Roadmap Progress
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <Progress value={path.progress} className="h-2 bg-muted/50 [&>div]:bg-accent" />
-                    <span className="text-xs font-mono text-muted-foreground">{path.progress}%</span>
-                  </div>
-                </div>
-
-                <div className="mt-auto">
-                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground">
-                    Next Milestones
-                  </h4>
-                  <ul className="space-y-3">
-                    {path.milestones.map((milestone, i) => (
-                      <li key={i} className="flex items-center gap-3">
-                        {milestone.completed ? (
-                          <CheckCircle className="h-5 w-5 text-accent" />
-                        ) : (
-                          <Circle className="h-5 w-5 text-muted-foreground/50" />
-                        )}
-                        <span
-                          className={cn(
-                            'text-sm',
-                            milestone.completed
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
-                          )}
-                        >
-                          {milestone.task}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2">
+            <p className="text-xs text-muted-foreground">Progress</p>
+            <Progress value={path.progress} className="w-full h-2" />
+            <Button variant="link" size="sm" className="px-0">
+              View Full Roadmap <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
 }

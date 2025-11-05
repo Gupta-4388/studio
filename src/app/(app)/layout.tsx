@@ -4,9 +4,12 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  Activity,
+  Book,
   Bot,
   FileText,
   LayoutGrid,
+  Lightbulb,
   LogOut,
   MessageSquare,
   TrendingUp,
@@ -36,7 +39,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
 import PageHeader from '@/components/dashboard/page-header';
 
 const navItems = [

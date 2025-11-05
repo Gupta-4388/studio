@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useRef, ChangeEvent } from 'react';
-import { Upload, FileText, Lightbulb, Loader2, X } from 'lucide-react';
+import { Upload, FileText, Lightbulb, Loader2, X, BrainCircuit, Sparkles, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { analyzeResume, AnalyzeResumeOutput } from '@/ai/flows/analyze-resume-flow';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 export default function ResumePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,7 +20,6 @@ export default function ResumePage() {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      // Limit file size to 5MB
       if (selectedFile.size > 5 * 1024 * 1024) {
         setError('File size must be less than 5MB.');
         return;
@@ -69,7 +69,7 @@ export default function ResumePage() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8">
+    <div className="w-full max-w-5xl mx-auto space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight">Resume Analyzer</h1>
         <p className="mt-2 text-muted-foreground">
@@ -77,12 +77,12 @@ export default function ResumePage() {
         </p>
       </div>
 
-      <Card className="p-0 overflow-hidden">
-        <CardHeader className="bg-muted/30">
+      <Card className="p-0 overflow-hidden shadow-lg">
+        <CardHeader className="bg-muted/20">
           <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="flex-1 space-y-1">
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <Upload className="h-6 w-6 text-accent" />
                 Upload Your Resume
               </CardTitle>
               <CardDescription>
@@ -97,16 +97,38 @@ export default function ResumePage() {
               accept=".pdf,.docx"
               onChange={handleFileChange}
             />
-            {!file && (
-               <Button onClick={() => fileInputRef.current?.click()}>
-                Select File
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {!file ? (
+                <Button onClick={() => fileInputRef.current?.click()} size="lg">
+                  <Upload className="mr-2" />
+                  Select File
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleAnalyzeClick}
+                  disabled={loading}
+                  size="lg"
+                  className='bg-accent hover:bg-accent/90'
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2" />
+                      Analyze My Resume
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6">
-          {file && (
-            <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+        {file && (
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border">
               <div className="flex items-center gap-3">
                 <FileText className="h-6 w-6 text-primary" />
                 <span className="font-medium">{file.name}</span>
@@ -116,25 +138,8 @@ export default function ResumePage() {
                 <X className="h-4 w-4"/>
               </Button>
             </div>
-          )}
-
-          <div className="mt-6 flex justify-center">
-            <Button
-              onClick={handleAnalyzeClick}
-              disabled={!file || loading}
-              size="lg"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                'Analyze My Resume'
-              )}
-            </Button>
-          </div>
-        </CardContent>
+          </CardContent>
+        )}
       </Card>
 
       {error && (
@@ -144,31 +149,39 @@ export default function ResumePage() {
         </Alert>
       )}
 
+      {loading && (
+        <div className="flex flex-col items-center justify-center gap-4 text-center p-8">
+            <Loader2 className="h-12 w-12 animate-spin text-accent" />
+            <p className="text-lg font-semibold">Analyzing your resume...</p>
+            <p className="text-muted-foreground">Our AI is working its magic to give you personalized feedback.</p>
+        </div>
+      )}
+
       {analysis && (
-        <div className="space-y-6 animate-in fade-in-50">
+        <div className="space-y-6 animate-in fade-in-50 duration-500">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-accent" />
-                Skill Summary
+                <BrainCircuit className="h-6 w-6 text-accent" />
+                AI Skill Summary
               </CardTitle>
               <CardDescription>An AI-generated overview of the skills identified in your resume.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 p-4 rounded-md">{analysis.skillSummary}</p>
+              <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 p-4 rounded-md border">{analysis.skillSummary}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Lightbulb className="h-5 w-5 text-accent" />
+                <Wand2 className="h-6 w-6 text-accent" />
                 Improvement Insights
               </CardTitle>
               <CardDescription>Actionable feedback to make your resume stand out.</CardDescription>
             </CardHeader>
             <CardContent>
-               <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 p-4 rounded-md">{analysis.improvementInsights}</p>
+              <div className="text-sm whitespace-pre-wrap font-mono bg-muted/50 p-4 rounded-md border" dangerouslySetInnerHTML={{ __html: analysis.improvementInsights.replace(/\n/g, '<br />') }} />
             </CardContent>
           </Card>
         </div>
