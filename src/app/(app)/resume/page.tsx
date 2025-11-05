@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, ChangeEvent } from 'react';
+import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import { Upload, FileText, Lightbulb, Loader2, X, BrainCircuit, Sparkles, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { analyzeResume, AnalyzeResumeOutput } from '@/ai/flows/analyze-resume-flow';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
 
 export default function ResumePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -16,6 +17,26 @@ export default function ResumePage() {
   const [error, setError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<AnalyzeResumeOutput | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (loading) {
+      setProgress(0);
+      timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 95) {
+            clearInterval(timer);
+            return 95;
+          }
+          return prev + 5;
+        });
+      }, 500);
+    }
+    return () => {
+      clearInterval(timer);
+    };
+  }, [loading]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -46,15 +67,17 @@ export default function ResumePage() {
       reader.onload = async () => {
         const resumeDataUri = reader.result as string;
         const result = await analyzeResume({ resumeDataUri });
+        setProgress(100);
         setAnalysis(result);
+        setLoading(false);
       };
       reader.onerror = () => {
         setError('Failed to read the file.');
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
       setError('An unexpected error occurred during analysis. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
@@ -126,7 +149,7 @@ export default function ResumePage() {
             </div>
           </div>
         </CardHeader>
-        {file && (
+        {file && !loading && (
           <CardContent className="p-6">
             <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border">
               <div className="flex items-center gap-3">
@@ -154,6 +177,7 @@ export default function ResumePage() {
             <Loader2 className="h-12 w-12 animate-spin text-accent" />
             <p className="text-lg font-semibold">Analyzing your resume...</p>
             <p className="text-muted-foreground">Our AI is working its magic to give you personalized feedback.</p>
+            <Progress value={progress} className="w-full max-w-sm mt-4 h-2" />
         </div>
       )}
 
