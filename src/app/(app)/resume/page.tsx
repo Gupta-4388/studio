@@ -244,7 +244,7 @@ export default function ResumePage() {
                           </CardTitle>
                           </CardHeader>
                           <CardContent className="space-y-4">
-                              {analysis.suggestedRoles?.map((role, index) => (
+                              {analysis.suggestedRoles.map((role, index) => (
                                   <div key={index} className="p-4 border rounded-lg">
                                       <div className="flex justify-between items-start">
                                           <div>

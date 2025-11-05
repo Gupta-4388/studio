@@ -50,7 +50,6 @@ const AnalyzeResumeOutputSchema = z.object({
     .describe('A list of skills extracted from the resume.'),
   suggestedRoles: z
     .array(SuggestedRoleSchema)
-    .optional()
     .describe(
       'A list of 3-5 suitable job roles based on the resume and current market analysis.'
     ),
