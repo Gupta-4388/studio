@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import ResumeAnalysis from '@/components/dashboard/resume-analysis';
-import ResumeChart from '@/components/dashboard/resume-chart';
 
 export default function ResumePage() {
   const [analysis, setAnalysis] = useState<AnalyzeResumeOutput | null>(null);
@@ -82,70 +81,55 @@ export default function ResumePage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="text-accent">Resume Analyzer</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              {...getRootProps()}
-              className={`flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
-                isDragActive
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border hover:border-primary/50'
-              }`}
-            >
-              <input {...getInputProps()} />
-              <Upload className="w-10 h-10 text-muted-foreground" />
-              <p className="mt-4 text-center text-muted-foreground">
-                {isDragActive
-                  ? 'Drop the file here ...'
-                  : 'Upload your resume here'}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                (PDF, DOCX, TXT)
-              </p>
-            </div>
-            {file && (
-              <div className="mt-4 flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <File className="w-5 h-5 text-primary" />
-                  <span className="font-medium truncate">{file.name}</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setFile(null);
-                    setAnalysis(null);
-                  }}
-                >
-                  Remove
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {loading && (
-          <div className="lg:col-span-2 flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            <p className="ml-4 text-lg">Analyzing your resume...</p>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-accent">Resume Analyzer</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div
+            {...getRootProps()}
+            className={`flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+              isDragActive
+                ? 'border-primary bg-primary/10'
+                : 'border-border hover:border-primary/50'
+            }`}
+          >
+            <input {...getInputProps()} />
+            <Upload className="w-12 h-12 text-muted-foreground" />
+            <p className="mt-4 text-center text-muted-foreground">
+              Upload your resume here
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              (PDF, DOCX, TXT)
+            </p>
           </div>
-        )}
-        
-        {!loading && analysis && (
-           <Card className="lg:col-span-2">
-            <CardHeader>
-                <CardTitle className="text-accent">Role Match Confidence</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <ResumeChart analysis={analysis} />
-            </CardContent>
-           </Card>
-        )}
-      </div>
+          {file && (
+            <div className="mt-6 flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <File className="w-6 h-6 text-primary" />
+                <span className="font-medium truncate">{file.name}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setFile(null);
+                  setAnalysis(null);
+                }}
+              >
+                Remove
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="ml-4 text-lg">Analyzing your resume...</p>
+        </div>
+      )}
 
       {analysis && !loading && <ResumeAnalysis analysis={analysis} />}
     </div>
