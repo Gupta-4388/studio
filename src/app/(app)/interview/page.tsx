@@ -43,7 +43,7 @@ const SpeechRecognition =
   (typeof window !== 'undefined' && window.SpeechRecognition) ||
   (typeof window !== 'undefined' && window.webkitSpeechRecognition);
 
-type InterviewMode = 'video' | 'text';
+type InterviewMode = 'video' | 'audio' | 'text';
 
 export default function InterviewPage() {
   const [domain, setDomain] = useState('');
@@ -92,7 +92,7 @@ export default function InterviewPage() {
   }, [interviewStarted, interviewMode, toast]);
 
   useEffect(() => {
-    if (SpeechRecognition && interviewMode === 'video') {
+    if (SpeechRecognition && interviewMode !== 'text') {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
@@ -297,6 +297,11 @@ export default function InterviewPage() {
                       <Video /> Video Interview
                     </div>
                   </SelectItem>
+                  <SelectItem value="audio">
+                    <div className="flex items-center gap-2">
+                      <Mic /> Audio Interview
+                    </div>
+                  </SelectItem>
                   <SelectItem value="text">
                     <div className="flex items-center gap-2">
                       <Keyboard /> Text-based Interview
@@ -390,7 +395,7 @@ export default function InterviewPage() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {interviewMode === 'video' && (
+        {interviewMode === 'video' ? (
           <Card className="flex-grow">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Your Camera</CardTitle>
@@ -423,7 +428,12 @@ export default function InterviewPage() {
               </div>
             </CardContent>
           </Card>
-        )}
+        ) : interviewMode === 'audio' ? (
+          <Card className="flex-grow flex flex-col items-center justify-center bg-muted">
+            <Mic className="w-24 h-24 text-muted-foreground" />
+            <p className="mt-4 text-muted-foreground">Audio only mode</p>
+          </Card>
+        ) : null}
 
         <Card>
           <CardHeader>
@@ -431,14 +441,14 @@ export default function InterviewPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <Textarea
-              placeholder={interviewMode === 'video' ? "Your answer will be transcribed here... or type it directly." : "Type your answer here..."}
+              placeholder={interviewMode !== 'text' ? "Your answer will be transcribed here... or type it directly." : "Type your answer here..."}
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               rows={interviewMode === 'video' ? 5 : 10}
               className="w-full"
             />
             <div className="flex justify-between items-center">
-              {interviewMode === 'video' ? (
+              {interviewMode !== 'text' ? (
                 <Button onClick={toggleRecording} variant="outline" size="icon">
                   {isRecording ? (
                     <MicOff className="text-red-500" />
@@ -463,3 +473,5 @@ export default function InterviewPage() {
     </div>
   );
 }
+
+    
