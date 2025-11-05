@@ -10,8 +10,10 @@ import {
   TrendingUp,
   DollarSign,
   Star,
+  FileWarning,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,41 +26,41 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
+import { recommendCareerPaths, RecommendCareerPathsOutput } from '@/ai/flows/recommend-career-paths-flow';
+import { useToast } from '@/hooks/use-toast';
 
-const careerPaths = [
-  {
-    title: 'AI/ML Engineer',
-    description:
-      'Design and develop machine learning and deep learning systems.',
-    demandScore: 9.2,
-    salaryRange: '$130k - $190k',
-    skills: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'NLP'],
-    progress: 75,
-    roadmapUrl: 'https://www.coursera.org/professional-certificates/google-ai-essentials',
-  },
-  {
-    title: 'Full-Stack Developer',
-    description:
-      'Work on both the front-end and back-end of web applications.',
-    demandScore: 8.8,
-    salaryRange: '$110k - $160k',
-    skills: ['JavaScript', 'React', 'Node.js', 'SQL', 'APIs'],
-    progress: 60,
-    roadmapUrl: 'https://www.coursera.org/professional-certificates/meta-front-end-developer',
-  },
-  {
-    title: 'Cloud & DevOps Engineer',
-    description: 'Manage and automate infrastructure on cloud platforms.',
-    demandScore: 9.5,
-    salaryRange: '$120k - $175k',
-    skills: ['AWS/GCP/Azure', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform'],
-    progress: 40,
-    roadmapUrl: 'https://www.coursera.org/professional-certificates/google-devops',
-  },
-];
+// Mocked user skills, in a real app this would come from the resume analysis
+const MOCK_USER_SKILLS = ['JavaScript', 'React', 'Node.js', 'Python', 'Machine Learning'];
+
+type CareerPath = RecommendCareerPathsOutput['careerPaths'][0];
 
 export default function DashboardPage() {
+  const [careerPaths, setCareerPaths] = useState<CareerPath[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    async function fetchCareerPaths() {
+      setLoading(true);
+      try {
+        const { careerPaths: paths } = await recommendCareerPaths({ skills: MOCK_USER_SKILLS });
+        setCareerPaths(paths);
+      } catch (error) {
+        console.error('Failed to fetch career paths:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Could not load personalized career paths. Please try again later.',
+        });
+        setCareerPaths([]); // Set to empty array to stop loading and show message
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCareerPaths();
+  }, [toast]);
+
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card className="col-span-1 lg:col-span-3">
@@ -168,7 +170,32 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {careerPaths.map((path, index) => (
+      {loading && Array.from({ length: 3 }).map((_, index) => (
+        <Card key={index} className="flex flex-col">
+          <CardHeader>
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </CardHeader>
+          <CardContent className="flex-grow space-y-4">
+            <Skeleton className="h-4 w-2/3" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/4" />
+              <div className="flex flex-wrap gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-20" />
+                <Skeleton className="h-6 w-12" />
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-2 w-full" />
+            <Skeleton className="h-4 w-1/2" />
+          </CardFooter>
+        </Card>
+      ))}
+
+      {!loading && careerPaths && careerPaths.length > 0 && careerPaths.map((path, index) => (
         <Card key={index} className="flex flex-col">
           <CardHeader>
             <div className="flex justify-between items-start">
@@ -212,6 +239,24 @@ export default function DashboardPage() {
           </CardFooter>
         </Card>
       ))}
+
+      {!loading && (!careerPaths || careerPaths.length === 0) && (
+         <Card className="col-span-1 md:col-span-2 lg:col-span-3">
+          <CardContent className="flex flex-col items-center justify-center text-center p-12">
+            <FileWarning className="w-12 h-12 text-muted-foreground mb-4" />
+            <h3 className="text-xl font-semibold">Analyze Your Resume to Get Started</h3>
+            <p className="text-muted-foreground mt-2 mb-6">
+              Upload your resume to receive personalized career path recommendations.
+            </p>
+            <Button asChild>
+              <Link href="/resume">
+                <Upload className="mr-2 h-4 w-4" /> Go to Resume Analyzer
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
     </div>
   );
 }
