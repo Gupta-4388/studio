@@ -171,7 +171,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   
-                  <div className="space-y-3 text-sm">
+                  <div className="grid sm:grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-2">
                        <TrendingUp className="h-5 w-5 text-muted-foreground" />
                        <div>
