@@ -45,9 +45,7 @@ export default function SettingsPage() {
   const { data: userProfile, isLoading } = useDoc<UserProfile>(userDocRef);
 
   const [resumeFile, setResumeFile] = useState<{ name: string } | null>(null);
-  const [avatarImage, setAvatarImage] = useState<string | null>(
-    'https://picsum.photos/seed/user/100/100'
-  );
+  const [avatarImage, setAvatarImage] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [careerPath, setCareerPath] = useState('');
@@ -337,5 +335,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    
