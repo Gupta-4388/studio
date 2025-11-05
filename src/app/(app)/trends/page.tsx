@@ -44,9 +44,18 @@ export default function TrendsPage() {
       setLoading(true);
       const cachedData = localStorage.getItem('jobTrendsData');
       if (cachedData) {
-        setTrendsData(JSON.parse(cachedData));
-        setLoading(false);
-        return;
+        try {
+          const parsedData = JSON.parse(cachedData);
+          // Simple validation to ensure the data structure is what we expect
+          if (parsedData.salaryTrends && parsedData.marketDemand && parsedData.marketDemand.length === 6) {
+            setTrendsData(parsedData);
+            setLoading(false);
+            return;
+          }
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+          // If parsing fails, fetch new data
+        }
       }
       try {
         const data = await getJobTrends();
@@ -161,6 +170,28 @@ export default function TrendsPage() {
                 strokeWidth={2}
                 dot={false}
               />
+              <Line
+                dataKey="DevOps Engineer"
+                type="monotone"
+                stroke="hsl(var(--chart-4))"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                dataKey="UX/UI Designer"
+                type="monotone"
+                stroke="hsl(var(--chart-5))"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                dataKey="Cybersecurity Analyst"
+                type="monotone"
+                stroke="hsl(var(--chart-1))"
+                strokeDasharray="3 3"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ChartContainer>
         </CardContent>
@@ -174,7 +205,7 @@ export default function TrendsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={{}} className="h-[300px] w-full">
+          <ChartContainer config={{}} className="h-[400px] w-full">
             <BarChart
               data={trendsData.marketDemand}
               layout="vertical"
@@ -187,7 +218,8 @@ export default function TrendsPage() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                width={120}
+                width={140}
+                interval={0}
               />
               <XAxis type="number" dataKey="demand" hide />
               <Tooltip
@@ -208,7 +240,7 @@ export default function TrendsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={{}} className="h-[300px] w-full">
+          <ChartContainer config={{}} className="h-[400px] w-full">
             <BarChart
               data={trendsData.jobOpeningsByLocation}
               layout="vertical"
@@ -222,6 +254,7 @@ export default function TrendsPage() {
                 axisLine={false}
                 tickMargin={8}
                 width={120}
+                interval={0}
               />
               <XAxis type="number" dataKey="openings" hide />
               <Tooltip
