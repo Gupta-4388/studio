@@ -8,6 +8,8 @@ import {
   Lightbulb,
   Loader2,
   TrendingUp,
+  DollarSign,
+  Star,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,13 +24,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 const careerPaths = [
   {
     title: 'AI/ML Engineer',
     description:
       'Design and develop machine learning and deep learning systems.',
-    growth: 18,
+    demandScore: 9.2,
+    salaryRange: '$130k - $190k',
     skills: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'NLP'],
     progress: 75,
   },
@@ -36,14 +40,16 @@ const careerPaths = [
     title: 'Full-Stack Developer',
     description:
       'Work on both the front-end and back-end of web applications.',
-    growth: 12,
+    demandScore: 8.8,
+    salaryRange: '$110k - $160k',
     skills: ['JavaScript', 'React', 'Node.js', 'SQL', 'APIs'],
     progress: 60,
   },
   {
     title: 'Cloud & DevOps Engineer',
     description: 'Manage and automate infrastructure on cloud platforms.',
-    growth: 22,
+    demandScore: 9.5,
+    salaryRange: '$120k - $175k',
     skills: ['AWS/GCP/Azure', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform'],
     progress: 40,
   },
@@ -166,15 +172,20 @@ export default function DashboardPage() {
               <CardTitle>{path.title}</CardTitle>
               <Badge
                 variant="secondary"
-                className="bg-green-800/20 text-green-400 border-none"
+                className="bg-yellow-800/20 text-yellow-400 border-none"
               >
-                <TrendingUp className="mr-1 h-4 w-4" /> +{path.growth}%
+                <Star className="mr-1 h-4 w-4" /> {path.demandScore}/10
               </Badge>
             </div>
             <CardDescription>{path.description}</CardDescription>
           </CardHeader>
-          <CardContent className="flex-grow">
-            <div className="mb-4">
+          <CardContent className="flex-grow space-y-4">
+             <div className="flex items-center text-sm text-muted-foreground">
+              <DollarSign className="mr-2 h-4 w-4" />
+              <span className="font-semibold">{path.salaryRange}</span>
+              <span className="ml-1">(est. annual)</span>
+            </div>
+            <div>
               <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
                 Required Skills
               </h4>
@@ -188,9 +199,9 @@ export default function DashboardPage() {
             </div>
           </CardContent>
           <CardFooter className="flex-col items-start gap-2">
-            <p className="text-xs text-muted-foreground">Progress</p>
+            <p className="text-xs text-muted-foreground">Your Skill Match</p>
             <Progress value={path.progress} className="w-full h-2" />
-            <Button variant="link" size="sm" className="px-0">
+            <Button variant="link" size="sm" className="px-0" disabled>
               View Full Roadmap <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </CardFooter>
