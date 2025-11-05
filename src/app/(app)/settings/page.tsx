@@ -143,6 +143,10 @@ export default function SettingsPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" type="email" defaultValue="your.email@example.com" />
               </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="career-path">Career Path</Label>
+                <Input id="career-path" placeholder="e.g., Software Engineer, Product Manager" />
+              </div>
             </div>
             <Button type="submit">Save changes</Button>
           </form>
