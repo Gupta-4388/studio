@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -25,7 +26,6 @@ export type MockInterviewInput = z.infer<typeof MockInterviewInputSchema>;
 const MockInterviewOutputSchema = z.object({
   question: z.string().describe('The AI-generated interview question.'),
   analysis: z.object({
-    tone: z.string().describe('Analysis of the candidate\'s tone during the answer.'),
     clarity: z.string().describe('Analysis of the clarity of the candidate\'s answer.'),
     content: z.string().describe('Analysis of the content and correctness of the candidate\'s answer.'),
   }).optional(),
@@ -44,7 +44,7 @@ const mockInterviewPrompt = ai.definePrompt({
   output: {schema: MockInterviewOutputSchema},
   prompt: `You are an AI-powered interview simulator. Generate interview questions based on the candidate's resume, domain, and experience level.
 
-Analyze the candidate's answers in real-time, providing feedback on their tone, clarity, and content.
+Analyze the candidate's answers in real-time, providing feedback on their clarity and content.
 
 Provide an overall score and improvement tips at the end of each answer.
 

@@ -199,7 +199,6 @@ export default function InterviewPage() {
       const analysisResult: MockInterviewOutput = {
         question: currentQuestion,
         analysis: {
-          tone: 'Confident and clear.',
           clarity: 'Well-structured and easy to follow.',
           content:
             'The answer was relevant and demonstrated good knowledge of the topic.',
@@ -359,12 +358,6 @@ export default function InterviewPage() {
                 <h4 className="font-semibold">Clarity:</h4>
                 <p className="text-muted-foreground">
                   {analysis.analysis?.clarity}
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold">Tone:</h4>
-                <p className="text-muted-foreground">
-                  {analysis.analysis?.tone}
                 </p>
               </div>
               <div>
