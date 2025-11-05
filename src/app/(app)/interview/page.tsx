@@ -22,8 +22,11 @@ import {
 } from '@/components/ui/select';
 import {
   mockInterviewWithRealtimeFeedback,
-  MockInterviewOutput,
 } from '@/ai/flows/mock-interview-flow';
+import {
+  analyzeInterviewAnswer,
+  AnalyzeInterviewAnswerOutput,
+} from '@/ai/flows/analyze-interview-answer-flow';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -56,7 +59,7 @@ export default function InterviewPage() {
   const [loading, setLoading] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
-  const [analysis, setAnalysis] = useState<MockInterviewOutput | null>(null);
+  const [analysis, setAnalysis] = useState<AnalyzeInterviewAnswerOutput | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
 
@@ -194,19 +197,10 @@ export default function InterviewPage() {
     setLoading(true);
     setAnalysis(null);
     try {
-      // This is a simplified simulation. A real implementation would send the answer
-      // to the backend for analysis against the specific question.
-      const analysisResult: MockInterviewOutput = {
+      const analysisResult = await analyzeInterviewAnswer({
         question: currentQuestion,
-        analysis: {
-          clarity: 'Well-structured and easy to follow.',
-          content:
-            'The answer was relevant and demonstrated good knowledge of the topic.',
-        },
-        score: 85,
-        improvementTips:
-          'Consider providing a more specific example to strengthen your point.',
-      };
+        answer: userAnswer,
+      });
       setAnalysis(analysisResult);
     } catch (error) {
        toast({

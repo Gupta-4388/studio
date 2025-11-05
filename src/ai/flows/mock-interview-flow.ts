@@ -25,12 +25,6 @@ export type MockInterviewInput = z.infer<typeof MockInterviewInputSchema>;
 
 const MockInterviewOutputSchema = z.object({
   question: z.string().describe('The AI-generated interview question.'),
-  analysis: z.object({
-    clarity: z.string().describe('Analysis of the clarity of the candidate\'s answer.'),
-    content: z.string().describe('Analysis of the content and correctness of the candidate\'s answer.'),
-  }).optional(),
-  score: z.number().describe('Overall score evaluating relevance, correctness, fluency and confidence.').optional(),
-  improvementTips: z.string().describe('Tips for improvement based on the interview simulation.'),
 });
 export type MockInterviewOutput = z.infer<typeof MockInterviewOutputSchema>;
 
@@ -42,11 +36,7 @@ const mockInterviewPrompt = ai.definePrompt({
   name: 'mockInterviewPrompt',
   input: {schema: MockInterviewInputSchema},
   output: {schema: MockInterviewOutputSchema},
-  prompt: `You are an AI-powered interview simulator. Generate interview questions based on the candidate's resume, domain, and experience level.
-
-Analyze the candidate's answers in real-time, providing feedback on their clarity and content.
-
-Provide an overall score and improvement tips at the end of each answer.
+  prompt: `You are an AI-powered interview simulator. Generate an interview question based on the candidate's resume, domain, and experience level.
 
 Consider the following information:
 
@@ -54,7 +44,7 @@ Domain: {{{domain}}}
 Experience Level: {{{experienceLevel}}}
 Resume: {{media url=resumeDataUri}}
 
-Generate an interview question:
+Generate one relevant interview question:
 `,
 });
 
