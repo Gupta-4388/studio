@@ -15,9 +15,6 @@ import { useToast } from '@/hooks/use-toast';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from './ui/card';
 import {
   Form,
@@ -86,14 +83,6 @@ export function AuthForm() {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardHeader className="text-center px-0">
-        <CardTitle>Welcome to PathFinder AI</CardTitle>
-        <CardDescription>
-          {activeTab === 'sign-in'
-            ? 'Sign in to access your dashboard.'
-            : 'Create an account to get started.'}
-        </CardDescription>
-      </CardHeader>
       <CardContent className="px-0 pb-0">
         <Tabs
           defaultValue="sign-in"

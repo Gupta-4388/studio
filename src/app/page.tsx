@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Bot, FileText, Briefcase, TrendingUp, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AuthForm } from '@/components/auth-form';
 
 export default function Home() {
@@ -19,6 +19,10 @@ export default function Home() {
               <Button variant="outline">Sign In</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Welcome to PathFinder AI</DialogTitle>
+                <DialogDescription>Sign in to access your dashboard.</DialogDescription>
+              </DialogHeader>
               <AuthForm />
             </DialogContent>
           </Dialog>
@@ -27,6 +31,10 @@ export default function Home() {
               <Button>Sign Up</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
+               <DialogHeader>
+                <DialogTitle>Welcome to PathFinder AI</DialogTitle>
+                <DialogDescription>Create an account to get started.</DialogDescription>
+              </DialogHeader>
               <AuthForm />
             </DialogContent>
           </Dialog>
@@ -57,6 +65,10 @@ export default function Home() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Welcome to PathFinder AI</DialogTitle>
+                      <DialogDescription>Sign in or create an account to get started.</DialogDescription>
+                    </DialogHeader>
                     <AuthForm />
                   </DialogContent>
                 </Dialog>
