@@ -20,8 +20,6 @@ import {
   Briefcase,
   CheckCircle,
   Lightbulb,
-  List,
-  Target,
 } from 'lucide-react';
 import { AnalyzeResumeOutput } from '@/ai/flows/analyze-resume-flow';
 
@@ -103,7 +101,7 @@ export default function ResumeAnalysis({ analysis }: ResumeAnalysisProps) {
                 <AccordionItem key={index} value={`item-${index}`}>
                   <AccordionTrigger>
                     <div className="flex justify-between w-full pr-4">
-                      <span>{role.title}</span>
+                      <span className="truncate">{role.title}</span>
                       <Badge variant="outline">{role.matchConfidence}%</Badge>
                     </div>
                   </AccordionTrigger>
