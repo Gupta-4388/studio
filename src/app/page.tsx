@@ -76,9 +76,6 @@ export default function Home() {
                 title="Mock Interview Simulator"
                 description="Practice for interviews with AI-generated questions and receive real-time analysis of your performance."
               />
-              <div className="flex items-center justify-center p-8 bg-card rounded-lg shadow-sm border border-dashed">
-                 <p className="text-center text-muted-foreground">And much more...</p>
-              </div>
             </div>
           </div>
         </section>
