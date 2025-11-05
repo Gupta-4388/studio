@@ -36,6 +36,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 
 // SpeechRecognition might not be available on the window object in all environments
 const SpeechRecognition =
@@ -114,7 +115,7 @@ export default function InterviewPage() {
     if (!domain) {
       toast({
         variant: 'destructive',
-        title: 'Please select a domain.',
+        title: 'Please enter a domain.',
       });
       return;
     }
@@ -241,28 +242,19 @@ export default function InterviewPage() {
           <CardHeader>
             <CardTitle>Mock Interview Simulator</CardTitle>
             <CardDescription>
-              Prepare for your next interview. Select your domain and
+              Prepare for your next interview. Enter your domain and
               experience level to begin.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="domain">Interview Domain</Label>
-              <Select onValueChange={setDomain} value={domain}>
-                <SelectTrigger id="domain">
-                  <SelectValue placeholder="e.g., Software Engineering" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Software Engineering">
-                    Software Engineering
-                  </SelectItem>
-                  <SelectItem value="Product Management">
-                    Product Management
-                  </SelectItem>
-                  <SelectItem value="Data Science">Data Science</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="domain"
+                placeholder="e.g., Software Engineering"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="experience">Experience Level</Label>
@@ -436,5 +428,3 @@ export default function InterviewPage() {
     </div>
   );
 }
-
-    
