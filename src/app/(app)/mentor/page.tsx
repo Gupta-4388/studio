@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Loader2, Send, User as UserIcon, Link as LinkIcon, BookOpen } from 'lucide-react';
+import { Bot, Loader2, Send, User as UserIcon, Link as LinkIcon, BookOpen, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +27,7 @@ import Link from 'next/link';
 type Message = {
   role: 'user' | 'model';
   content: string;
+  keyPoints?: string[];
   resources?: AIMentorProvidePersonalizedGuidanceOutput['suggestedResources'];
 };
 
@@ -85,6 +86,7 @@ export default function MentorPage() {
       const modelMessage: Message = {
         role: 'model',
         content: result.response,
+        keyPoints: result.keyPoints,
         resources: result.suggestedResources,
       };
       setMessages((prev) => [...prev, modelMessage]);
@@ -139,9 +141,24 @@ export default function MentorPage() {
                     )}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
+
+                    {message.keyPoints && message.keyPoints.length > 0 && (
+                        <div className="mt-4 space-y-2 border-t pt-3">
+                           <h4 className="font-semibold text-sm">Key Takeaways:</h4>
+                           <ul className="space-y-2">
+                            {message.keyPoints.map((point, i) => (
+                                <li key={i} className="flex items-start gap-2 text-sm">
+                                    <CheckCircle className="w-4 h-4 mt-0.5 text-accent shrink-0"/>
+                                    <span>{point}</span>
+                                </li>
+                            ))}
+                           </ul>
+                        </div>
+                    )}
+                    
                     {message.resources && message.resources.length > 0 && (
-                      <div className="mt-4 space-y-2">
-                        <h4 className="font-semibold flex items-center gap-2"><BookOpen className="w-4 h-4"/> Suggested Resources:</h4>
+                      <div className="mt-4 space-y-2 border-t pt-3">
+                        <h4 className="font-semibold flex items-center gap-2 text-sm"><BookOpen className="w-4 h-4"/> Suggested Resources:</h4>
                         {message.resources.map((resource, i) => (
                            <Card key={i} className="bg-background/50 hover:bg-background transition-colors">
                              <CardContent className="p-3">
