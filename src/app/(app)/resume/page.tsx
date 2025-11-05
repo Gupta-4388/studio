@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Upload, File, Loader2 } from 'lucide-react';
+import { Upload, File, Loader2, X } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import * as React from 'react';
 
@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import ResumeAnalysis from '@/components/dashboard/resume-analysis';
-import { useDoc, useFirestore, useUser } from '@/firebase';
+import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
@@ -34,7 +34,7 @@ export default function ResumePage() {
   const { user } = useUser();
   const firestore = useFirestore();
 
-  const userDocRef = React.useMemo(
+  const userDocRef = useMemoFirebase(
     () => (user ? doc(firestore, 'users', user.uid) : null),
     [user, firestore]
   );
@@ -65,7 +65,6 @@ export default function ResumePage() {
   };
 
   const handleAnalysis = async (fileToAnalyze: File) => {
-    if (!userDocRef) return;
     setLoading(true);
     setAnalysis(null);
     localStorage.removeItem('recommendedCareerPaths'); // Clear previous recommendations
@@ -122,12 +121,9 @@ export default function ResumePage() {
     maxFiles: 1,
   });
 
-  const handleRemoveResume = () => {
-    if (!userDocRef) return;
-    setDocumentNonBlocking(userDocRef, { resumeDataUri: null, resumeFileName: null }, { merge: true });
+  const handleRemoveFile = () => {
     setFile(null);
     setAnalysis(null);
-    localStorage.removeItem('recommendedCareerPaths');
   };
 
   return (
@@ -148,7 +144,7 @@ export default function ResumePage() {
             <input {...getInputProps()} />
             <Upload className="w-12 h-12 text-muted-foreground" />
             <p className="mt-4 text-center text-muted-foreground">
-              Upload your resume here
+              { file ? "Drop a different file or click to replace" : "Upload your resume here" }
             </p>
             <p className="text-sm text-muted-foreground mt-1">
               (PDF, DOCX, TXT)
@@ -162,10 +158,10 @@ export default function ResumePage() {
               </div>
               <Button
                 variant="ghost"
-                size="sm"
-                onClick={handleRemoveResume}
+                size="icon"
+                onClick={handleRemoveFile}
               >
-                Remove
+                <X className="w-5 h-5" />
               </Button>
             </div>
           )}
