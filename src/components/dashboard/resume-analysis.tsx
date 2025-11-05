@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -29,10 +30,10 @@ interface ResumeAnalysisProps {
 
 export default function ResumeAnalysis({ analysis }: ResumeAnalysisProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up">
       {/* Left Column */}
       <div className="lg:col-span-2 space-y-6">
-        <Card>
+        <Card className="transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-accent">
               <Activity />
@@ -44,7 +45,7 @@ export default function ResumeAnalysis({ analysis }: ResumeAnalysisProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-accent">
               <Lightbulb />
@@ -69,7 +70,7 @@ export default function ResumeAnalysis({ analysis }: ResumeAnalysisProps) {
 
       {/* Right Column */}
       <div className="space-y-6">
-        <Card>
+        <Card className="transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-accent">
               <Award />
@@ -85,7 +86,7 @@ export default function ResumeAnalysis({ analysis }: ResumeAnalysisProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-accent">
               <Briefcase />

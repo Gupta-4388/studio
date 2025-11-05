@@ -104,7 +104,7 @@ export default function MentorPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)]">
+    <div className="flex flex-col h-[calc(100vh-100px)] animate-fade-in">
       <Card className="flex-1 flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export default function MentorPage() {
                 <div
                   key={index}
                   className={cn(
-                    'flex items-start gap-4',
+                    'flex items-start gap-4 animate-fade-in-up',
                     message.role === 'user' ? 'justify-end' : ''
                   )}
                 >
@@ -160,7 +160,7 @@ export default function MentorPage() {
                       <div className="mt-4 space-y-2 border-t pt-3">
                         <h4 className="font-semibold flex items-center gap-2 text-sm"><BookOpen className="w-4 h-4"/> Suggested Resources:</h4>
                         {message.resources.map((resource, i) => (
-                           <Card key={i} className="bg-background/50 hover:bg-background transition-colors">
+                           <Card key={i} className="bg-background/50 hover:bg-background transition-colors transform hover:scale-105">
                              <CardContent className="p-3">
                                 <Link href={resource.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
                                   <LinkIcon className="w-4 h-4 text-muted-foreground"/>
@@ -186,7 +186,7 @@ export default function MentorPage() {
                 </div>
               ))}
               {loading && (
-                 <div className="flex items-start gap-4">
+                 <div className="flex items-start gap-4 animate-fade-in-up">
                     <Avatar className="w-8 h-8 border">
                       <AvatarFallback>
                         <Bot />

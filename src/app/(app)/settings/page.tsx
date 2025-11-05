@@ -188,14 +188,14 @@ export default function SettingsPage() {
 
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in-up">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground">
           Manage your account settings and preferences.
         </p>
       </div>
-      <Card>
+      <Card className="transition-transform transform hover:scale-105">
         <CardHeader>
           <CardTitle>Profile</CardTitle>
           <CardDescription>
@@ -239,7 +239,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
       
-      <Card>
+      <Card className="transition-transform transform hover:scale-105">
         <CardHeader>
           <CardTitle>Your Resume</CardTitle>
           <CardDescription>
@@ -282,7 +282,7 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-            <Card>
+            <Card className="transition-transform transform hover:scale-105">
               <CardHeader>
                 <CardTitle>Appearance</CardTitle>
                 <CardDescription>
@@ -293,7 +293,7 @@ export default function SettingsPage() {
                 <ThemeToggle />
               </CardContent>
             </Card>
-            <Card>
+            <Card className="transition-transform transform hover:scale-105">
                 <CardHeader>
                     <CardTitle>Sign Out</CardTitle>
                     <CardDescription>
@@ -308,7 +308,7 @@ export default function SettingsPage() {
                 </CardContent>
             </Card>
         </div>
-        <Card>
+        <Card className="transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle>Change Password</CardTitle>
             <CardDescription>

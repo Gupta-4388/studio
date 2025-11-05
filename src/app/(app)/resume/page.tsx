@@ -17,12 +17,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import ResumeAnalysis from '@/components/dashboard/resume-analysis';
+import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { doc } from 'firebase/firestore';
+
+
+type UserProfile = {
+  resumeDataUri?: string;
+  resumeFileName?: string;
+};
 
 export default function ResumePage() {
   const [analysis, setAnalysis] = useState<AnalyzeResumeOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = useMemoFirebase(
+    () => (user ? doc(firestore, 'users', user.uid) : null),
+    [user, firestore]
+  );
+  const { data: userProfile } = useDoc<UserProfile>(userDocRef);
+
 
   const onDrop = async (acceptedFiles: File[]) => {
     const uploadedFile = acceptedFiles[0];
@@ -51,6 +69,11 @@ export default function ResumePage() {
 
         const analysisResult = await analyzeResume({ resumeDataUri });
         setAnalysis(analysisResult);
+
+        if (userDocRef) {
+          setDocumentNonBlocking(userDocRef, { resumeDataUri, resumeFileName: fileToAnalyze.name }, { merge: true });
+        }
+
 
         if (analysisResult.extractedSkills.length > 0) {
           const careerPathResult = await recommendCareerPaths({
@@ -98,11 +121,24 @@ export default function ResumePage() {
   const handleRemoveFile = () => {
     setFile(null);
     setAnalysis(null);
+    if (userDocRef) {
+      setDocumentNonBlocking(userDocRef, { resumeDataUri: null, resumeFileName: null }, { merge: true });
+    }
   };
+  
+  React.useEffect(() => {
+    if (userProfile?.resumeFileName && !file) {
+      setFile(new File([], userProfile.resumeFileName));
+    }
+    if (!userProfile?.resumeFileName && file) {
+      setFile(null)
+    }
+  }, [userProfile, file]);
+
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-6 animate-fade-in">
+      <Card className="transition-transform transform hover:scale-105">
         <CardHeader>
           <CardTitle className="text-accent">Resume Analyzer</CardTitle>
         </CardHeader>
@@ -125,7 +161,7 @@ export default function ResumePage() {
             </p>
           </div>
           {file && (
-            <div className="mt-6 flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="mt-6 flex items-center justify-between p-3 bg-muted/50 rounded-lg animate-fade-in">
               <div className="flex items-center gap-3">
                 <File className="w-6 h-6 text-primary" />
                 <span className="font-medium truncate">{file.name}</span>
@@ -143,7 +179,7 @@ export default function ResumePage() {
       </Card>
 
       {loading && (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center py-12 animate-fade-in">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <p className="ml-4 text-lg">Analyzing your resume...</p>
         </div>

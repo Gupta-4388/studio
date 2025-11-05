@@ -244,8 +244,8 @@ export default function InterviewPage() {
 
   if (!interviewStarted) {
     return (
-      <div className="flex justify-center items-center h-full">
-        <Card className="w-full max-w-md">
+      <div className="flex justify-center items-center h-full animate-fade-in">
+        <Card className="w-full max-w-md transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle>Mock Interview Simulator</CardTitle>
             <CardDescription>
@@ -312,9 +312,9 @@ export default function InterviewPage() {
   }
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 h-full">
+    <div className="grid md:grid-cols-2 gap-8 h-full animate-fade-in-up">
       <div className="flex flex-col gap-4">
-        <Card className="flex-grow">
+        <Card className="flex-grow transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle>Interview Question</CardTitle>
           </CardHeader>
@@ -327,7 +327,7 @@ export default function InterviewPage() {
           </CardContent>
         </Card>
         {analysis ? (
-          <Card>
+          <Card className="animate-fade-in">
             <CardHeader>
               <CardTitle>AI Feedback</CardTitle>
               <CardDescription>
@@ -372,7 +372,7 @@ export default function InterviewPage() {
 
       <div className="flex flex-col gap-4">
         {interviewMode === 'video' ? (
-          <Card className="flex-grow">
+          <Card className="flex-grow transition-transform transform hover:scale-105">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Your Camera</CardTitle>
               <Badge variant={hasCameraPermission ? 'default' : 'destructive'}>
@@ -405,10 +405,10 @@ export default function InterviewPage() {
             </CardContent>
           </Card>
         ) : interviewMode === 'audio' ? (
-          <Card className="flex flex-col items-center justify-center bg-muted p-6">
+          <Card className="flex flex-col items-center justify-center bg-muted p-4">
             <Mic
               className={cn(
-                'w-16 h-16 text-muted-foreground transition-colors',
+                'w-12 h-12 text-muted-foreground transition-colors',
                 isRecording && 'text-green-500 animate-pulse'
               )}
             />
@@ -418,7 +418,7 @@ export default function InterviewPage() {
           </Card>
         ) : null}
 
-        <Card>
+        <Card className="transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle>Your Answer</CardTitle>
           </CardHeader>
