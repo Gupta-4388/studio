@@ -33,10 +33,10 @@ service cloud.firestore {
     /**
      * @description Secures user profiles, ensuring users can only manage their own data.
      * @path /users/{userId}
-     * @allow (create) - User with UID 'user123' can create their profile if request.auth.uid == 'user123'.
-     * @allow (get, update, delete) - User with UID 'user123' can access/modify their profile at /users/user123 if authenticated.
-     * @deny (create) - User with UID 'user456' cannot create a profile with ID 'user123'.
-     * @deny (get, update, delete) - User with UID 'user456' cannot access/modify the profile at /users/user123.
+     * @allow (create, update) - User with UID 'user123' can create or update their profile if request.auth.uid == 'user123'.
+     * @allow (get, delete) - User with UID 'user123' can access/modify their profile at /users/user123 if authenticated.
+     * @deny (create, update) - User with UID 'user456' cannot create or update a profile with ID 'user123'.
+     * @deny (get, delete) - User with UID 'user456' cannot access/modify the profile at /users/user123.
      * @principle Enforces path-based ownership for user data.
      */
     match /users/{userId} {
@@ -48,15 +48,8 @@ service cloud.firestore {
         return isSignedIn() && request.auth.uid == userId;
       }
 
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isOwner(userId);
-      allow delete: if isExistingOwner(userId);
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId);
     }
 
     /**
