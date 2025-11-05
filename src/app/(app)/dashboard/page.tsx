@@ -72,48 +72,6 @@ export default function DashboardPage() {
             Here&apos;s a snapshot of your career journey.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
-                Resume Score
-              </CardTitle>
-              <Lightbulb className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">88%</div>
-              <p className="text-xs text-muted-foreground">
-                Top 15% of profiles
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
-                Skills to Develop
-              </CardTitle>
-              <Activity className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">5</div>
-              <p className="text-xs text-muted-foreground">
-                2 new skills suggested
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
-                Active Learning
-              </CardTitle>
-              <Book className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3 Courses</div>
-              <p className="text-xs text-muted-foreground">1 course completed</p>
-            </CardContent>
-          </Card>
-        </CardContent>
       </Card>
 
       <Card className="col-span-1 md:col-span-2 lg:col-span-3">
