@@ -11,6 +11,7 @@ import {
   DollarSign,
   Star,
   FileWarning,
+  Upload,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -29,6 +30,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { recommendCareerPaths, RecommendCareerPathsOutput } from '@/ai/flows/recommend-career-paths-flow';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 // Mocked user skills, in a real app this would come from the resume analysis
 const MOCK_USER_SKILLS = ['JavaScript', 'React', 'Node.js', 'Python', 'Machine Learning'];
@@ -230,8 +232,8 @@ export default function DashboardPage() {
           </CardContent>
           <CardFooter className="flex-col items-start gap-2">
             <p className="text-xs text-muted-foreground">Your Skill Match</p>
-            <Progress value={path.progress} className="w-full h-2" />
-            <Button asChild variant="link" size="sm" className="px-0">
+            <Progress value={path.progress} className="w-full h-2 [&>div]:bg-accent" />
+            <Button asChild variant="link" size="sm" className="px-0 text-accent">
               <Link href={path.roadmapUrl} target="_blank" rel="noopener noreferrer">
                 View Full Roadmap <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
