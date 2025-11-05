@@ -94,6 +94,14 @@ export default function TrendsPage() {
     }).format(value);
   }
 
+  const formatNumber = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      compactDisplay: 'short',
+    }).format(value);
+  }
+
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card className="col-span-1 lg:col-span-2">
@@ -105,7 +113,7 @@ export default function TrendsPage() {
         </CardHeader>
       </Card>
       
-      <Card>
+      <Card className="col-span-1 lg:col-span-2">
         <CardHeader>
           <CardTitle>Average Salary Trends (Last 12 Months)</CardTitle>
           <CardDescription>
@@ -191,6 +199,41 @@ export default function TrendsPage() {
           </ChartContainer>
         </CardContent>
       </Card>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Job Openings by Location</CardTitle>
+          <CardDescription>
+            Number of open positions in key tech hubs across India and the world.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={{}} className="h-[300px] w-full">
+            <BarChart
+              data={trendsData.jobOpeningsByLocation}
+              layout="vertical"
+              margin={{ left: 20 }}
+            >
+              <CartesianGrid horizontal={false} />
+              <YAxis
+                dataKey="location"
+                type="category"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                width={120}
+              />
+              <XAxis type="number" dataKey="openings" hide />
+              <Tooltip
+                cursor={{ fill: 'hsl(var(--muted))' }}
+                content={<ChartTooltipContent formatter={(value) => formatNumber(value as number)} indicator="dot" />}
+              />
+              <Bar dataKey="openings" fill="hsl(var(--chart-2))" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
     </div>
   );
 }
