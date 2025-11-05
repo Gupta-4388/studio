@@ -104,7 +104,7 @@ export default function MentorPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] animate-fade-in">
+    <div className="flex flex-col h-[calc(100vh-8rem)] sm:h-[calc(100vh-10rem)] animate-fade-in">
       <Card className="flex-1 flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -115,18 +115,18 @@ export default function MentorPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col p-0">
-          <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
+          <ScrollArea className="flex-1 p-4 sm:p-6" ref={scrollAreaRef}>
             <div className="space-y-6">
               {messages.map((message, index) => (
                 <div
                   key={index}
                   className={cn(
-                    'flex items-start gap-4 animate-fade-in-up',
+                    'flex items-start gap-2 sm:gap-4 animate-fade-in-up',
                     message.role === 'user' ? 'justify-end' : ''
                   )}
                 >
                   {message.role === 'model' && (
-                    <Avatar className="w-8 h-8 border">
+                    <Avatar className="w-8 h-8 border hidden sm:flex">
                       <AvatarFallback>
                         <Bot />
                       </AvatarFallback>
@@ -134,7 +134,7 @@ export default function MentorPage() {
                   )}
                   <div
                     className={cn(
-                      'max-w-lg p-3 rounded-lg',
+                      'max-w-md lg:max-w-lg p-3 rounded-lg',
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted'
@@ -187,7 +187,7 @@ export default function MentorPage() {
               ))}
               {loading && (
                  <div className="flex items-start gap-4 animate-fade-in-up">
-                    <Avatar className="w-8 h-8 border">
+                    <Avatar className="w-8 h-8 border hidden sm:flex">
                       <AvatarFallback>
                         <Bot />
                       </AvatarFallback>

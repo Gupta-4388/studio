@@ -244,7 +244,7 @@ export default function InterviewPage() {
 
   if (!interviewStarted) {
     return (
-      <div className="flex justify-center items-center h-full animate-fade-in">
+      <div className="flex justify-center items-center h-full animate-fade-in p-4 sm:p-0">
         <Card className="w-full max-w-md transition-transform transform hover:scale-105">
           <CardHeader>
             <CardTitle>Mock Interview Simulator</CardTitle>
@@ -312,7 +312,7 @@ export default function InterviewPage() {
   }
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 h-full animate-fade-in-up">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full animate-fade-in-up">
       <div className="flex flex-col gap-4">
         <Card className="flex-grow transition-transform transform hover:scale-105">
           <CardHeader>
@@ -418,17 +418,16 @@ export default function InterviewPage() {
           </Card>
         ) : null}
 
-        <Card className="transition-transform transform hover:scale-105">
+        <Card className="transition-transform transform hover:scale-105 flex-grow">
           <CardHeader>
             <CardTitle>Your Answer</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex flex-col h-[calc(100%-76px)]">
             <Textarea
               placeholder={interviewMode !== 'text' ? "Your answer will be transcribed here... or type it directly." : "Type your answer here..."}
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              rows={interviewMode === 'video' ? 5 : 10}
-              className="w-full"
+              className="w-full flex-grow"
             />
             <div className="flex justify-between items-center">
               {interviewMode !== 'text' ? (
