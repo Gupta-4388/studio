@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -53,6 +54,16 @@ const navItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [avatarImage, setAvatarImage] = React.useState<string | null>(
+    'https://picsum.photos/seed/user/100/100'
+  );
+
+  React.useEffect(() => {
+    const savedAvatar = localStorage.getItem('avatarImage');
+    if (savedAvatar) {
+      setAvatarImage(savedAvatar);
+    }
+  }, [pathname]); // Re-check on route change in case settings are updated.
 
   return (
     <SidebarProvider>
@@ -96,7 +107,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src="https://picsum.photos/seed/user/100/100" />
+                    <AvatarImage src={avatarImage || ''} />
                     <AvatarFallback>U</AvatarFallback>
                   </Avatar>
                 </Button>

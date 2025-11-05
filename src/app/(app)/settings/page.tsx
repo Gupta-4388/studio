@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -21,11 +21,19 @@ import { File, Upload, X } from 'lucide-react';
 export default function SettingsPage() {
   const { toast } = useToast();
   const [resumeFile, setResumeFile] = useState<{ name: string } | null>(null);
+  const [avatarImage, setAvatarImage] = useState<string | null>(
+    'https://picsum.photos/seed/user/100/100'
+  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const savedResumeName = localStorage.getItem('resumeFileName');
     if (savedResumeName) {
       setResumeFile({ name: savedResumeName });
+    }
+    const savedAvatar = localStorage.getItem('avatarImage');
+    if (savedAvatar) {
+      setAvatarImage(savedAvatar);
     }
   }, []);
 
@@ -106,6 +114,27 @@ export default function SettingsPage() {
       description: 'Your resume has been removed.',
     });
   };
+  
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUri = reader.result as string;
+        setAvatarImage(dataUri);
+        localStorage.setItem('avatarImage', dataUri);
+        toast({
+          title: 'Photo updated',
+          description: 'Your new profile photo has been saved.',
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
 
 
   return (
@@ -127,12 +156,19 @@ export default function SettingsPage() {
           <form onSubmit={handleProfileSubmit} className="space-y-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src="https://picsum.photos/seed/user/100/100" />
+                <AvatarImage src={avatarImage || ''} />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
-              <Button type="button" variant="outline">
+              <Button type="button" variant="outline" onClick={handleAvatarClick}>
                 Change photo
               </Button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleAvatarChange}
+                className="hidden"
+                accept="image/png, image/jpeg"
+              />
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
