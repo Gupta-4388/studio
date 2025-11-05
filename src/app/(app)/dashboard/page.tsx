@@ -38,7 +38,6 @@ export default function DashboardPage() {
     const fetchRecommendations = async () => {
       setLoading(true);
       
-      // Check for existing recommendations
       const existingData = localStorage.getItem('recommendedCareerPaths');
       if (existingData) {
         setRecommendedPaths(JSON.parse(existingData));
@@ -46,7 +45,6 @@ export default function DashboardPage() {
         return;
       }
 
-      // If no recommendations, check for resume and generate them
       const resumeDataUri = localStorage.getItem('resumeDataUri');
       if (resumeDataUri) {
         try {
