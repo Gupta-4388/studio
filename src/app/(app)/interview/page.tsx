@@ -393,6 +393,7 @@ export default function InterviewPage() {
                     className="w-full aspect-video rounded-md"
                     autoPlay
                     playsInline
+                    muted 
                   />
                 ) : (
                   <Alert variant="destructive">
