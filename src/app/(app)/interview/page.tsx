@@ -87,6 +87,7 @@ export default function InterviewPage() {
 
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
+            videoRef.current.play();
           }
         } catch (error) {
           console.error('Error accessing camera:', error);
@@ -392,6 +393,7 @@ export default function InterviewPage() {
                     className="w-full aspect-video rounded-md"
                     autoPlay
                     muted
+                    playsInline
                   />
                 ) : (
                   <Alert variant="destructive">
