@@ -65,6 +65,8 @@ export default function InterviewPage() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const finalTranscriptRef = useRef('');
+
 
   const { toast } = useToast();
   const { user } = useUser();
@@ -112,17 +114,18 @@ export default function InterviewPage() {
 
       recognitionRef.current.onresult = (event) => {
         let interimTranscript = '';
-        let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
+            finalTranscriptRef.current += event.results[i][0].transcript;
           } else {
             interimTranscript += event.results[i][0].transcript;
           }
         }
-        setUserAnswer(
-          (prev) => prev + finalTranscript + interimTranscript
-        );
+        setUserAnswer(finalTranscriptRef.current + interimTranscript);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsRecording(false);
       };
     }
 
@@ -185,6 +188,7 @@ export default function InterviewPage() {
       recognitionRef.current?.stop();
     } else {
       setUserAnswer('');
+      finalTranscriptRef.current = '';
       recognitionRef.current?.start();
     }
     setIsRecording(!isRecording);
