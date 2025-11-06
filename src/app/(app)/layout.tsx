@@ -120,9 +120,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-card/50 px-6 sticky top-0 z-30">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
+              {pathname !== '/dashboard' && (
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              )}
               <SidebarTrigger />
               <PageHeader />
             </div>
