@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -19,9 +20,9 @@ import { useToast } from '@/hooks/use-toast';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription
 } from './ui/card';
 import {
   Form,
@@ -116,16 +117,8 @@ export function AuthForm() {
   };
 
   return (
-    <Card className="border-0 shadow-none">
-      <CardHeader>
-        <CardTitle>Welcome to PathFinder AI</CardTitle>
-        <CardDescription>
-          {activeTab === 'sign-in'
-            ? 'Sign in to access your dashboard.'
-            : 'Create an account to get started.'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="px-6 pb-0">
+    <Card className="border-0 shadow-none p-0">
+      <CardContent className="p-0">
         <Tabs
           defaultValue="sign-in"
           value={activeTab}
@@ -278,11 +271,16 @@ export function AuthForm() {
         </Tabs>
 
         <div className="relative my-4">
-          <Separator />
-          <p className="absolute -top-3 left-1/2 -translate-x-1/2 bg-card px-2 text-sm text-muted-foreground">
-            OR
-          </p>
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              OR
+            </span>
+          </div>
         </div>
+
 
         <div className="grid grid-cols-1 gap-4">
           <Button variant="outline" onClick={handleGoogleSignIn}>

@@ -33,6 +33,7 @@ import { useDoc, useFirestore, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 
 type UserProfile = {
+  name?: string;
   resumeDataUri?: string;
 };
 
@@ -94,9 +95,9 @@ export default function DashboardPage() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up">
-      <Card className="col-span-1 lg:col-span-3 transition-transform transform hover:scale-105">
+      <Card className="col-span-1 lg:col-span-3 transition-transform transform hover:scale-[1.02]">
         <CardHeader>
-          <CardTitle>Welcome Back, PathFinder!</CardTitle>
+          <CardTitle>Welcome Back, {userProfile?.name || 'PathFinder'}!</CardTitle>
           <CardDescription>
             Here&apos;s a snapshot of your career journey. Let&apos;s find your
             path.
@@ -104,9 +105,9 @@ export default function DashboardPage() {
         </CardHeader>
       </Card>
 
-      <Card className="col-span-1 md:col-span-2 lg:col-span-3 transition-transform transform hover:scale-105">
+      <Card className="col-span-1 md:col-span-2 lg:col-span-3 transition-transform transform hover:scale-[1.02]">
         <CardHeader>
-          <CardTitle className="text-accent">Get Started</CardTitle>
+          <CardTitle className="text-primary">Get Started</CardTitle>
           <CardDescription>
             Begin by analyzing your resume or talking to your AI mentor.
           </CardDescription>
@@ -116,8 +117,8 @@ export default function DashboardPage() {
             href="/resume"
             className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted transition-all duration-300 transform hover:-translate-y-1"
           >
-            <div className="bg-accent/10 p-3 rounded-full">
-              <CheckCircle className="w-5 h-5 text-accent" />
+            <div className="bg-primary/10 p-3 rounded-full">
+              <CheckCircle className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="font-semibold">Analyze Your Resume</p>
@@ -131,8 +132,8 @@ export default function DashboardPage() {
             href="/mentor"
             className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted transition-all duration-300 transform hover:-translate-y-1"
           >
-            <div className="bg-accent/10 p-3 rounded-full">
-              <Lightbulb className="w-5 h-5 text-accent" />
+            <div className="bg-primary/10 p-3 rounded-full">
+              <Lightbulb className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="font-semibold">Chat with AI Mentor</p>
@@ -146,8 +147,8 @@ export default function DashboardPage() {
             href="/trends"
             className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted transition-all duration-300 transform hover:-translate-y-1"
           >
-            <div className="bg-accent/10 p-3 rounded-full">
-              <TrendingUp className="w-5 h-5 text-accent" />
+            <div className="bg-primary/10 p-3 rounded-full">
+              <TrendingUp className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="font-semibold">Explore Job Trends</p>
@@ -160,9 +161,9 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      <Card className="col-span-1 md:col-span-2 lg:col-span-3 transition-transform transform hover:scale-105">
+      <Card className="col-span-1 md:col-span-2 lg:col-span-3 transition-transform transform hover:scale-[1.02]">
         <CardHeader>
-          <CardTitle className="text-accent">Recommended Career Paths</CardTitle>
+          <CardTitle className="text-primary">Recommended Career Paths</CardTitle>
           <CardDescription>
             Based on your resume, here are some career paths you could excel in.
             Upload your resume on the resume or settings page to see recommendations.
@@ -176,7 +177,7 @@ export default function DashboardPage() {
           ) : recommendedPaths && recommendedPaths.careerPaths.length > 0 ? (
             <div className="grid gap-6">
               {recommendedPaths.careerPaths.map((path, index) => (
-                <div key={index} className="p-6 border rounded-lg space-y-4 animate-fade-in-up transition-transform transform hover:scale-105" style={{animationDelay: `${index * 150}ms`}}>
+                <div key={index} className="p-6 border rounded-lg space-y-4 animate-fade-in-up transition-transform transform hover:scale-[1.02]" style={{animationDelay: `${index * 150}ms`}}>
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div className="flex-1">
                       <h3 className="text-lg font-bold">{path.title}</h3>
@@ -213,9 +214,9 @@ export default function DashboardPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium">Your Skill Match</span>
-                      <span className="font-bold text-accent">{path.progress}%</span>
+                      <span className="font-bold text-primary">{path.progress}%</span>
                     </div>
-                    <Progress value={path.progress} className="[&>div]:bg-green-500" />
+                    <Progress value={path.progress} />
                   </div>
                 </div>
               ))}

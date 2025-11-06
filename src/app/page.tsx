@@ -16,11 +16,11 @@ export default function Home() {
         <div className="flex items-center gap-4">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">Sign In</Button>
+              <Button variant="ghost">Sign In</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Welcome to PathFinder AI</DialogTitle>
+                <DialogTitle>Welcome Back</DialogTitle>
                 <DialogDescription>Sign in to access your dashboard.</DialogDescription>
               </DialogHeader>
               <AuthForm />
@@ -28,12 +28,12 @@ export default function Home() {
           </Dialog>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Sign Up</Button>
+              <Button>Get Started</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                <DialogHeader>
-                <DialogTitle>Welcome to PathFinder AI</DialogTitle>
-                <DialogDescription>Create an account to get started.</DialogDescription>
+                <DialogTitle>Create an Account</DialogTitle>
+                <DialogDescription>Join PathFinder AI to start your journey.</DialogDescription>
               </DialogHeader>
               <AuthForm />
             </DialogContent>
@@ -52,16 +52,16 @@ export default function Home() {
           <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in-up">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-foreground to-gray-400 leading-tight">
-                Navigate Your Career Path with AI
+                Your Career, Amplified by AI
               </h1>
               <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
-                PathFinder AI leverages cutting-edge artificial intelligence to analyze your skills, guide your growth, and connect you with the future of your career.
+                PathFinder AI is your intelligent partner for career growth. Analyze skills, practice interviews, and discover your perfect career path.
               </p>
               <div className="mt-8 flex justify-center gap-4">
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button size="lg" className="font-semibold transform transition-transform duration-300 hover:scale-110">
-                      Explore <ArrowRight className="ml-2 h-5 w-5" />
+                      Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
@@ -80,7 +80,7 @@ export default function Home() {
         <section id="features" className="py-20 md:py-28 bg-card/50">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 animate-fade-in-up">
-              <h2 className="text-3xl md:text-4xl font-bold">All-in-One Career Platform</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">An Entire Career Toolkit</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
                 From resume to interview, PathFinder AI provides the tools you need to succeed in today's competitive job market.
               </p>
@@ -111,6 +111,11 @@ export default function Home() {
                 title="Mock Interview Simulator"
                 description="Practice for interviews with AI-generated questions and receive real-time analysis of your performance."
               />
+               <FeatureCard
+                icon={<ArrowRight className="h-8 w-8 text-accent" />}
+                title="And Much More"
+                description="We're constantly adding new features to help you succeed in your career."
+              />
             </div>
           </div>
         </section>
@@ -125,7 +130,7 @@ export default function Home() {
 }
 
 const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
-  <div className="p-8 bg-card rounded-lg shadow-sm border text-left transform transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:border-accent group animate-fade-in-up">
+  <div className="p-8 bg-card rounded-lg shadow-sm border border-transparent text-left transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:border-accent group animate-fade-in-up">
     <div className="mb-4 text-accent transition-colors duration-300 group-hover:text-primary">{icon}</div>
     <h3 className="text-xl font-bold mb-2">{title}</h3>
     <p className="text-muted-foreground">{description}</p>

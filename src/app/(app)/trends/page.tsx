@@ -113,7 +113,7 @@ export default function TrendsPage() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up">
-      <Card className="col-span-1 lg:col-span-2 transition-transform transform hover:scale-105">
+      <Card className="col-span-1 lg:col-span-2 transition-transform transform hover:scale-[1.02]">
         <CardHeader>
           <CardTitle>Job Market Trends</CardTitle>
           <CardDescription>
@@ -122,7 +122,7 @@ export default function TrendsPage() {
         </CardHeader>
       </Card>
       
-      <Card className="col-span-1 lg:col-span-2 transition-transform transform hover:scale-105">
+      <Card className="col-span-1 lg:col-span-2 transition-transform transform hover:scale-[1.02]">
         <CardHeader>
           <CardTitle>Average Salary Trends (Last 12 Months)</CardTitle>
           <CardDescription>
@@ -197,7 +197,7 @@ export default function TrendsPage() {
         </CardContent>
       </Card>
 
-      <Card className="transition-transform transform hover:scale-105">
+      <Card className="transition-transform transform hover:scale-[1.02]">
         <CardHeader>
           <CardTitle>Current Market Demand</CardTitle>
           <CardDescription>
@@ -232,7 +232,7 @@ export default function TrendsPage() {
         </CardContent>
       </Card>
       
-      <Card className="transition-transform transform hover:scale-105">
+      <Card className="transition-transform transform hover:scale-[1.02]">
         <CardHeader>
           <CardTitle>Job Openings by Location</CardTitle>
           <CardDescription>
