@@ -85,7 +85,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarHeader>
           <div className="flex items-center justify-between p-2">
             <Logo />
-            <SidebarTrigger className="md:hidden" />
+            {/* This trigger is now only for mobile, as requested */}
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -123,7 +123,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <Button variant="ghost" size="icon" onClick={() => router.back()}>
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <SidebarTrigger className="hidden md:flex" />
+              <SidebarTrigger />
               <PageHeader />
             </div>
             <div className="flex-1" />
