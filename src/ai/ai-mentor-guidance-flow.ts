@@ -69,7 +69,7 @@ const prompt = ai.definePrompt({
   User Query: {{{query}}}
 
   Please provide a helpful and informative response tailored to the user's specific needs and goals.
-  If relevant, include suggested resources like YouTube videos, course links, and websites. Prioritize free certifications and resources.
+  If relevant, include suggested resources like YouTube videos, course links, and websites. Ensure all links are valid and working. Prioritize free certifications and resources whenever possible.
 `,
 });
 
